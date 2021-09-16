@@ -1,0 +1,32 @@
+.container {
+  padding: 2rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.task {
+  p {
+    padding-left: 2rem;
+    font-size: 1.5rem;
+  }
+}
+
+.date {
+  font-size: 1.2rem;
+  margin-right: 2rem;
+}
+
+.buttons {
+  button {
+    border: none;
+    background: #eee;
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
