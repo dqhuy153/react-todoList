@@ -25,12 +25,7 @@ function App() {
           <Route path="/about">
             <About />
           </Route>
-          {/* <Route path="/products" exact>
-          <Products />
-        </Route>
-        <Route path="/products/:productId">
-          <ProductDetail />
-        </Route> */}
+          
         </Switch>
       </Suspense>
     </Layout>
