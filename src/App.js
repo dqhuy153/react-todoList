@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
 import Room from './pages/Room';
 
+// lazy load for using page
 const Home = React.lazy(() => import('./pages/Home'));
 const About = React.lazy(() => import('./pages/About'));
 
