@@ -22,12 +22,14 @@ h1 {
 .own__room--organ {
   background-color: #ff8368;
 }
-.button__tools{
- display: flex;
- justify-content: space-around;
- align-items: center;
+
+.button__tools {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
-.button__tools > img{
+
+.button__tools>img {
   padding: 0 8px;
 }
 
@@ -38,12 +40,18 @@ h1 {
   width: 100%;
   padding: 0 32px;
 
+  .container__recent--show__rooms {
+    text-align: right;
+    text-decoration: underline;
+    padding: 0 0 8px 0;
+  }
+
   .container__workspaces {
     width: 100%;
     height: 200px;
 
-    .container__workspaces--head ,
-      .container__workspaces--bottom {
+    .container__workspaces--head,
+    .container__workspaces--bottom {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -56,19 +64,14 @@ h1 {
     width: 100%;
     height: 200px;
 
+
+
     .container__recent--chidls {
       display: grid;
       grid-template-columns: auto auto auto auto;
-      grid-template-rows:auto;
-      i
-      .container__recent--show__rooms {
-        u {
-          float: right;
-        }
+      grid-template-rows: auto;
 
-      }
-
-      .container__recent--chidl {
+      i .container__recent--chidl {
 
         width: 250px;
 
@@ -76,6 +79,7 @@ h1 {
     }
   }
 }
-.container__bottom{
+
+.container__bottom {
   height: 80px !important;
 }

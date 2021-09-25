@@ -6,7 +6,9 @@ import iconAddCircle from '../assets/images/add_circle.png'
 import iconKey from '../assets/images/keyboard_tab.png'
 function Home(props) {
   return (
+    // workspace
     <div className={styles.container}>
+      {/*your workspaces */}
       <div className={styles.container__workspaces}>
         <div className={styles['container__workspaces--head']}>
           <h1>Your WorkSpaces</h1>
@@ -38,16 +40,14 @@ function Home(props) {
             </div>
           </div>
         </div>
-        <span className={styles['container__recent--show__rooms']}>
-            <u>Browser all your created room</u>
-        </span>
-
+        <p className={styles['container__recent--show__rooms']}>
+            Browser all your created room
+        </p>
         <div className={`${styles.container__workspaces} ${styles.container__bottom}`}>
         <div className={styles['container__workspaces--bottom']}>
-          <h1>Your WorkSpaces</h1>
+          <h1>Recent joined</h1>
           <Button className={styles.button__tools}><img src={iconKey} alt="add icon" />Join</Button>
         </div>
-       
       </div>
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
