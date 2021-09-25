@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import TodoList from '../todos/TodoList';
+import TodoList from '../components/todos/TodoList';
 
 import styles from './Home.module.scss';
 

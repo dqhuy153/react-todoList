@@ -4,9 +4,10 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/LoadingSpinner';
+import Room from './pages/Room';
 
-const Home = React.lazy(() => import('./components/pages/Home'));
-const About = React.lazy(() => import('./components/pages/About'));
+const Home = React.lazy(() => import('./pages/Home'));
+const About = React.lazy(() => import('./pages/About'));
 
 function App() {
   return (
@@ -22,15 +23,12 @@ function App() {
           <Route path="/" exact>
             <Home />
           </Route>
+          <Route path="/room/:roomId">
+            <Room />
+          </Route>
           <Route path="/about">
             <About />
           </Route>
-          {/* <Route path="/products" exact>
-          <Products />
-        </Route>
-        <Route path="/products/:productId">
-          <ProductDetail />
-        </Route> */}
         </Switch>
       </Suspense>
     </Layout>
