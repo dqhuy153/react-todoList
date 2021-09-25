@@ -29,10 +29,6 @@ function App() {
           <Route path="/about">
             <About />
           </Route>
-<<<<<<< HEAD
-=======
-          
->>>>>>> e03ad3e3d5a6333ac6bfd01d91fd75c6948711e7
         </Switch>
       </Suspense>
     </Layout>
