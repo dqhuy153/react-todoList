@@ -5,6 +5,11 @@ import Card from '../components/UI/Card/Card'
 import iconAddCircle from '../assets/images/add_circle.png'
 import iconKey from '../assets/images/keyboard_tab.png'
 function Home(props) {
+  const [countCard, setCoundCard] = useState('')
+  const clickHandler = () =>{
+    
+  }
+
   return (
     // workspace
     <div className={styles.container}>
@@ -12,7 +17,7 @@ function Home(props) {
       <div className={styles.container__workspaces}>
         <div className={styles['container__workspaces--head']}>
           <h1>Your WorkSpaces</h1>
-          <Button className={styles.button__tools}><img src={iconAddCircle} alt="add icon" />Room</Button>
+          <Button onClick={clickHandler} className={styles.button__tools}><img src={iconAddCircle} alt="add icon" />Room</Button>
         </div>
         <Card className={`${styles.room} ${styles['own__room--blue']}`}>Your own room</Card>
       </div>
@@ -40,13 +45,13 @@ function Home(props) {
             </div>
           </div>
         </div>
-        <p className={styles['container__recent--show__rooms']}>
+        <div onlick={clickHandler} className={styles['container__recent--show__rooms']}>
             Browser all your created room
-        </p>
+        </div>
         <div className={`${styles.container__workspaces} ${styles.container__bottom}`}>
         <div className={styles['container__workspaces--bottom']}>
           <h1>Recent joined</h1>
-          <Button className={styles.button__tools}><img src={iconKey} alt="add icon" />Join</Button>
+          <Button onClick={clickHandler} className={styles.button__tools}><img src={iconKey} alt="add icon" />Join</Button>
         </div>
       </div>
       <div className={styles.container__recent}>

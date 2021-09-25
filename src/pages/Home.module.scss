@@ -12,15 +12,15 @@ h1 {
 }
 
 .own__room--blue {
-  background-color: #68A4FF;
+  background-color: #68A4FF !important;
 }
 
 .own__room--red {
-  background-color: #ff6868;
+  background-color: #ff6868 !important;
 }
 
 .own__room--organ {
-  background-color: #ff8368;
+  background-color: #ff8368 !important;
 }
 
 .button__tools {
@@ -28,6 +28,11 @@ h1 {
   justify-content: space-around;
   align-items: center;
 }
+
+.button__tools:hover {
+  cursor: pointer;
+}
+
 
 .button__tools>img {
   padding: 0 8px;
