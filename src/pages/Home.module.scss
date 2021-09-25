@@ -1,6 +1,81 @@
+h1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
 
-.container{
+.room {
+  width: 230px;
+  height: 100px;
+  text-align: center;
+  line-height: 80px;
+}
+
+.own__room--blue {
+  background-color: #68A4FF;
+}
+
+.own__room--red {
+  background-color: #ff6868;
+}
+
+.own__room--organ {
+  background-color: #ff8368;
+}
+.button__tools{
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+}
+.button__tools > img{
+  padding: 0 8px;
+}
+
+.container {
   display: block;
   font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  padding: 0 32px;
 
+  .container__workspaces {
+    width: 100%;
+    height: 200px;
+
+    .container__workspaces--head ,
+      .container__workspaces--bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+
+  .container__recent {
+
+    width: 100%;
+    height: 200px;
+
+    .container__recent--chidls {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows:auto;
+      i
+      .container__recent--show__rooms {
+        u {
+          float: right;
+        }
+
+      }
+
+      .container__recent--chidl {
+
+        width: 250px;
+
+      }
+    }
+  }
+}
+.container__bottom{
+  height: 80px !important;
 }
