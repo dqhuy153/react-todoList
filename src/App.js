@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import Layout from './components/layout/Layout';
-import LoadingSpinner from './components/UI/LoadingSpinner';
+import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
 import Room from './pages/Room';
 
 const Home = React.lazy(() => import('./pages/Home'));
