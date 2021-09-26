@@ -6,6 +6,10 @@ import Input from '../components/UI/Input/Input'
 import iconAddCircle from '../assets/images/add_circle.png'
 import iconKey from '../assets/images/keyboard_tab.png'
 
+
+
+
+
 const ROOM = {
   ownRoom: {
     id: 0,
@@ -36,7 +40,7 @@ const ROOM = {
   joinedRooms: [
     {
       id: 1,
-      nameRoom: "Room 1"
+      nameRoom: "Room huy"
     },
     {
       id: 2,
@@ -64,6 +68,10 @@ function Home(props) {
   const clickHandler = () => {
 
   }
+  const submitHandler = (even) =>{
+    even.prevenDefault()
+    props.onCancel()
+  }
 
   return (
     //div
@@ -80,13 +88,16 @@ function Home(props) {
       </div>
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
-          <div className={styles['container__recent--chidl']}>
-            {ROOM.createdRooms.map(room =>
+          {ROOM.createdRooms.slice(0,4).map(room =>
+            <div className={styles['container__recent--chidl']}>
+
               <Card key={room.id} className={`${styles.room} ${styles['own__room--red']}`}>
-                <p>{room.nameRoom} <div className={styles.button__edit}>...</div></p>
+                <p>{room.nameRoom} </p>
+                <div className={styles.button__edit}>123456789</div>
               </Card>
-            )}
-          </div>
+
+            </div>
+          )}
         </div>
       </div>
       <div onlick={clickHandler} className={styles['container__recent--show__rooms']}>
@@ -100,43 +111,50 @@ function Home(props) {
       </div>
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
-          <div className={styles['container__recent--chidl']}>
-            {ROOM.joinedRooms.map(room =>
+          
+          {ROOM.joinedRooms.slice(0,4).map(room =>
+
+            <div className={styles['container__recent--chidl']}>
               <Card className={`${styles.room} ${styles['own__room--organ']}`}>
-              <p>{room.nameRoom} </p>
+                <p>{room.nameRoom} </p>
               </Card>
-            )}
-          </div>
+            </div>
+          )}
+
         </div>
       </div>
-      <div className={styles.create__room}>
+      <form className={styles.create__room}>
         <Card className={styles['create__room--field']}>
           <div className={styles['create__room--field__title']}>Create New Room</div>
           <hr />
           <div className={styles['join__room--field__input']}>
-            <Input placeholder="Room title" />
+            <Input placeholder="Room title"/>
             <Input placeholder="Room password" />
           </div>
           <div className={styles['input__room-create']}>
-            <Button>Cancel</Button>
+            <Button >Cancel</Button>
             <Button>Create</Button>
           </div>
         </Card>
-      </div>
-      <div className={styles.join__room}>
+      </form>
+
+
+      {/* <form className={styles.join__room}>
         <Card className={styles['join__room--field']}>
           <div className={styles['create__room--field__title']}>Join a Room</div>
           <hr />
           <div className={styles['join__room--field__input']}>
             <Input />
             <Input />
+            <input placeholder="check"/>
+
           </div>
           <div className={styles['input__room-create']}>
-            <Button>Cancel</Button>
+            <Button >Cancel</Button>
             <Button>Join</Button>
           </div>
         </Card>
-      </div>
+      </form> */}
     </div>
 
 

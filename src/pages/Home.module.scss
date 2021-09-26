@@ -39,12 +39,14 @@ h1 {
 .button__tools>img {
   padding: 0 8px;
 }
-.button__edit{
-  width: 10px ;
+
+.button__edit {
+  width: 10px;
   // height: 10px;
-  border: unset ;
-  
+  border: unset;
+
 }
+
 .container {
   display: block;
   font-size: 16px;
@@ -84,6 +86,7 @@ h1 {
       grid-template-columns: auto auto auto auto;
       grid-template-rows: auto auto;
       gap: 3px;
+
       .container__recent--chidl {
 
         width: 250px;
@@ -105,9 +108,27 @@ h1 {
   position: absolute;
   width: 100%;
   z-index: 2;
-  .create__room--field__title{
-    font-size: 20px;
+
+ 
+
+  .create__room--field__title {
+    font-size: 24px;
+    text-align: center;
+    padding: 16px 0;
   }
+
+  .join__room--field__input {
+    display: block;
+    padding: 0 32px;
+  }
+
+}
+
+.input__room-create {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 0 32px;
+
 }
 
 .create__room--field,
@@ -115,5 +136,5 @@ h1 {
   width: 500px;
   height: 250px;
   margin: auto;
-  
+
 }
