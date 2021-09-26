@@ -1,11 +1,18 @@
 import React from 'react';
+import { getFirstLetterOfName } from '../../util/helper';
 import MemberItem from './MemberItem';
 
 import styles from './MemberList.module.scss';
 
 export default function MemberList({ items, ...props }) {
   const showItems = items.slice(0, 3);
-  const additionNumMember = items.length > 3 ? items.length - 3 : null;
+  let additionNumMember = null;
+  let additionItems = null;
+
+  if (items.length > 3) {
+    additionNumMember = items.length - 3;
+    additionItems = items.slice(3);
+  }
 
   return (
     <ul className={styles.container}>
@@ -14,12 +21,17 @@ export default function MemberList({ items, ...props }) {
           <MemberItem
             id={member.id}
             name={member.name}
-            firstLetter={member.name[0]}
+            firstLetter={getFirstLetterOfName(member.name)}
           />
         </li>
       ))}
       {additionNumMember && (
-        <MemberItem firstLetter={`+${additionNumMember}`} />
+        <li>
+          <MemberItem
+            firstLetter={`+${additionNumMember}`}
+            additionItems={additionItems}
+          />
+        </li>
       )}
     </ul>
   );
