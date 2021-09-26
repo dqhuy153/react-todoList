@@ -7,6 +7,10 @@ import iconAddCircle from '../assets/images/add_circle.png'
 import iconKey from '../assets/images/keyboard_tab.png'
 
 const ROOM = {
+  ownRoom: {
+    id: 0,
+    nameRoom: "Name your own"
+  },
   createdRooms: [
     {
       id: 1,
@@ -54,7 +58,6 @@ const ROOM = {
 }
 
 
-
 function Home(props) {
 
   const [countCard, setCoundCard] = useState('')
@@ -73,33 +76,16 @@ function Home(props) {
           <h1>Your WorkSpaces</h1>
           <Button onClick={clickHandler} className={styles.button__tools}><img src={iconAddCircle} alt="add icon" />Room</Button>
         </div>
-        <Card className={`${styles.room} ${styles['own__room--blue']}`}>Your own room</Card>
+        <Card className={`${styles.room} ${styles['own__room--blue']}`}>{ROOM.ownRoom.nameRoom}</Card>
       </div>
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
           <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--red']}`} key={props.roomId}>
-              <p>Your created room 1 <div className={styles.button__edit}>...</div></p>
-              
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--red']}`} key={props.roomId}>
-              <p>Your created room 1 <div className={styles.button__edit}>...</div></p>
-              
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--red']}`} key={props.roomId}>
-              <p>Your created room 1 <div className={styles.button__edit}>...</div></p>
-              
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--red']}`} key={props.roomId}>
-              <p>Your created room 1 <div className={styles.button__edit}>...</div></p>
-              
-            </Card>
+            {ROOM.createdRooms.map(room =>
+              <Card key={room.id} className={`${styles.room} ${styles['own__room--red']}`}>
+                <p>{room.nameRoom} <div className={styles.button__edit}>...</div></p>
+              </Card>
+            )}
           </div>
         </div>
       </div>
@@ -115,25 +101,11 @@ function Home(props) {
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
           <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--organ']}`} key={props.roomId}>
-              <p>Joined room 1</p> 
-             
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--organ']}`} key={props.roomId}>
-              Joined room 2
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--organ']}`} key={props.roomId}>
-              Joined room 3
-            </Card>
-          </div>
-          <div className={styles['container__recent--chidl']}>
-            <Card className={`${styles.room} ${styles['own__room--organ']}`} key={props.roomId}>
-              Joined room 4
-            </Card>
+            {ROOM.joinedRooms.map(room =>
+              <Card className={`${styles.room} ${styles['own__room--organ']}`}>
+              <p>{room.nameRoom} </p>
+              </Card>
+            )}
           </div>
         </div>
       </div>
@@ -142,8 +114,8 @@ function Home(props) {
           <div className={styles['create__room--field__title']}>Create New Room</div>
           <hr />
           <div className={styles['join__room--field__input']}>
-            <Input placeholder="Room title"/>
-            <Input placeholder="Room password"/>
+            <Input placeholder="Room title" />
+            <Input placeholder="Room password" />
           </div>
           <div className={styles['input__room-create']}>
             <Button>Cancel</Button>
@@ -156,8 +128,8 @@ function Home(props) {
           <div className={styles['create__room--field__title']}>Join a Room</div>
           <hr />
           <div className={styles['join__room--field__input']}>
-          <Input/>
-            <Input/>
+            <Input />
+            <Input />
           </div>
           <div className={styles['input__room-create']}>
             <Button>Cancel</Button>
