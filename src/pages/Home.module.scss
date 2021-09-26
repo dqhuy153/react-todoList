@@ -9,6 +9,8 @@ h1 {
   height: 100px;
   text-align: center;
   line-height: 80px;
+  color: white;
+
 }
 
 .own__room--blue {
@@ -37,13 +39,19 @@ h1 {
 .button__tools>img {
   padding: 0 8px;
 }
-
+.button__edit{
+  width: 10px ;
+  // height: 10px;
+  border: unset ;
+  
+}
 .container {
   display: block;
   font-size: 16px;
   font-family: 'Roboto', sans-serif;
   width: 100%;
   padding: 0 32px;
+  position: relative;
 
   .container__recent--show__rooms {
     text-align: right;
@@ -75,8 +83,8 @@ h1 {
       display: grid;
       grid-template-columns: auto auto auto auto;
       grid-template-rows: auto;
-
-      i .container__recent--chidl {
+      gap: 3px;
+      .container__recent--chidl {
 
         width: 250px;
 
@@ -87,4 +95,25 @@ h1 {
 
 .container__bottom {
   height: 80px !important;
+}
+
+// css for toggle
+.create__room,
+.join__room {
+  display: block;
+  background-color: rgba(0, 0, 0, .5);
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  .create__room--field__title{
+    font-size: 20px;
+  }
+}
+
+.create__room--field,
+.join__room--field {
+  width: 500px;
+  height: 250px;
+  margin: auto;
+  
 }
