@@ -10,5 +10,14 @@
     .title {
       font-size: 2.5rem;
     }
+    .icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .settingIcon {
+        margin-left: 3rem;
+      }
+    }
   }
 }

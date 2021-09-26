@@ -1,0 +1,83 @@
+.container {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--primary-color);
+  border-radius: 50%;
+  position: relative;
+
+  .icon {
+    color: #000;
+    font-weight: 500;
+    font-size: 1.8rem;
+    position: absolute;
+    top: 25%;
+    right: 24%;
+    cursor: pointer;
+  }
+
+  .tag {
+    color: #333;
+    padding: 1rem 2.5rem;
+    width: auto;
+    position: absolute;
+    right: 0;
+    top: 120%;
+    width: max-content;
+    min-width: 22rem;
+
+    .tag-title {
+      font-weight: bold;
+      font-size: 1.7rem;
+      padding: 1.3rem 0;
+    }
+
+    .tag-password {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 1.3rem;
+
+      span {
+        font-size: 1.3rem;
+      }
+
+      .eye-icon {
+        cursor: pointer;
+      }
+    }
+
+    p {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      padding: 0.5rem 0;
+    }
+
+    .tag-member-list {
+      list-style: none;
+      margin-bottom: 1.3rem;
+    }
+
+    .tag-member-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 0.8rem;
+
+      .tag-member-item_left {
+        display: flex;
+        align-items: center;
+        width: 85%;
+
+        .tag-member-item_name {
+          margin-left: 1rem;
+        }
+      }
+
+      .tag-member-delete {
+        cursor: pointer;
+      }
+    }
+  }
+}

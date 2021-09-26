@@ -1,0 +1,22 @@
+.container {
+  textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    min-height: 7rem;
+    resize: none;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+
+    svg {
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+  }
+}
