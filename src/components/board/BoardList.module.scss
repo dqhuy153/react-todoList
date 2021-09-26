@@ -1,0 +1,37 @@
+.container {
+  list-style: none;
+  display: flex;
+
+  .board-container {
+    width: 25rem;
+    margin-right: 2rem;
+  }
+
+  .new-board-container {
+    text-align: center;
+    width: 20rem;
+
+    .new-board-btn {
+      button {
+        width: 100%;
+        border: none;
+        padding: 1.3rem;
+        background: #fff;
+        font-size: 1.7rem;
+        font-weight: 500;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      span {
+        font-size: 2.1rem;
+        font-weight: bold;
+        margin-left: 3rem;
+      }
+    }
+
+    .new-board-form {
+      padding: 1.5rem;
+    }
+  }
+}
