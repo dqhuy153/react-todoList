@@ -2,7 +2,7 @@
 .create__room,
 .join__room {
   display: block;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, .3);
   position: absolute;
   width: 100%;
   z-index: 2;
@@ -15,7 +15,7 @@
 
   .join__room--field__input {
     display: block;
-    padding: 0 32px;
+    padding:0 32px;
   }
 
 }
