@@ -1,40 +1,140 @@
+h1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.room {
+  width: 230px;
+  height: 100px;
+  text-align: center;
+  line-height: 80px;
+  color: white;
+
+}
+
+.own__room--blue {
+  background-color: #68A4FF !important;
+}
+
+.own__room--red {
+  background-color: #ff6868 !important;
+}
+
+.own__room--organ {
+  background-color: #ff8368 !important;
+}
+
+.button__tools {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button__tools:hover {
+  cursor: pointer;
+}
+
+
+.button__tools>img {
+  padding: 0 8px;
+}
+
+.button__edit {
+  width: 10px;
+  // height: 10px;
+  border: unset;
+
+}
+
 .container {
-  padding: 18rem 0;
+  display: block;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  padding: 0 32px;
+  position: relative;
 
-  h1 {
-    text-align: center;
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
-    font-size: 3.5rem;
+  .container__recent--show__rooms {
+    text-align: right;
+    text-decoration: underline;
+    padding: 0 0 8px 0;
   }
 
-  .completed-title {
-    margin-top: 8rem;
-  }
+  .container__workspaces {
+    width: 100%;
+    height: 200px;
 
-  .add {
-    text-align: center;
-    margin-bottom: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    input {
-      border: none;
-      border-bottom: 1px solid #eee;
-      font-size: 1.6rem;
-      width: 45%;
-      padding: 2rem 3rem;
-      outline: none;
-    }
-
-    button {
-      width: 5%;
-      background: none;
-      border: none;
-      font-size: 3rem;
-      font-weight: 100;
-      cursor: pointer;
+    .container__workspaces--head,
+    .container__workspaces--bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   }
+
+
+  .container__recent {
+
+    width: 100%;
+    height: 200px;
+
+
+
+    .container__recent--chidls {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows: auto auto;
+      gap: 3px;
+
+      .container__recent--chidl {
+
+        width: 250px;
+
+      }
+    }
+  }
+}
+
+.container__bottom {
+  height: 80px !important;
+}
+
+// css for toggle
+.create__room,
+.join__room {
+  display: block;
+  background-color: rgba(0, 0, 0, .5);
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+
+ 
+
+  .create__room--field__title {
+    font-size: 24px;
+    text-align: center;
+    padding: 16px 0;
+  }
+
+  .join__room--field__input {
+    display: block;
+    padding: 0 32px;
+  }
+
+}
+
+.input__room-create {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 0 32px;
+
+}
+
+.create__room--field,
+.join__room--field {
+  width: 500px;
+  height: 250px;
+  margin: auto;
+
 }
