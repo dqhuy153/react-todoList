@@ -83,7 +83,9 @@ const ROOM = {
 
 function Home(props) {
 
-  const [countCard, setCoundCard] = useState()
+  const [countCard, setCoundCard] = useState(0)
+  
+
   const [formIsValid, setFormIsValid] = useState(false)
  
   const [emailState, dispatchEmail] = useReducer(roomTitleReducer, {
@@ -175,5 +177,5 @@ function Home(props) {
     </div>
   )
 }
-export default Home
+export default React.memo(Home)
 
