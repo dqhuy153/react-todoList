@@ -57,6 +57,10 @@ export default function BoardItem({
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (newTaskTitle.trim() === '') {
+      return alert("Task's title is required!");
+    }
+
     //add new tasks
     const updatedTasks = tasks;
     updatedTasks.push({
@@ -117,7 +121,7 @@ export default function BoardItem({
               value={newTaskTitle}
               onSubmit={handleSubmit}
               onClose={handleClose}
-              buttonWidth="60%"
+              buttonWidth="50%"
               buttonFontSize="0.9rem"
             />
           )}

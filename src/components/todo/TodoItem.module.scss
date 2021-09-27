@@ -1,13 +1,59 @@
 .container {
-  padding: 2rem 0;
-  border-bottom: 1px solid #eee;
+  padding: 1rem;
+  background: var(--primary-color);
   width: 100%;
+  border-radius: 10px;
+  margin-bottom: 0.7rem;
+  position: relative;
+
+  .edit {
+    position: absolute;
+    right: 0;
+    padding: 0.7rem;
+    background: var(--primary-color);
+    cursor: pointer;
+    height: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      color: rgb(255, 255, 255);
+    }
+
+    &:hover {
+      background: #fff;
+      transition: all 0.2s linear;
+
+      svg {
+        color: #000;
+        transition: all 0.2s linear;
+      }
+    }
+  }
+
+  .task {
+    width: 85%;
+    display: flex;
+    align-items: center;
+
+    p {
+      padding-left: 1.3rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+  }
 }
 
-.task {
-  p {
-    padding-left: 2rem;
-    font-size: 1.2rem;
+.completed {
+  background: #c7ffb4;
+
+  .edit {
+    background: #c7ffb4;
+    border: 1px solid #c7ffb4;
   }
 }
 

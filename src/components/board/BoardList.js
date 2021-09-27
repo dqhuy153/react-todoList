@@ -27,6 +27,10 @@ export default function BoardList({
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (newBoardTitle.trim() === '') {
+      return alert("Board's title is required!");
+    }
+
     onCreateNewBoard(newBoardTitle);
 
     setShowNewBoard(false);
@@ -71,7 +75,7 @@ export default function BoardList({
               value={newBoardTitle}
               onSubmit={handleSubmit}
               onClose={handleClose}
-              buttonWidth="60%"
+              buttonWidth="50%"
               buttonFontSize="0.9rem"
             />
           </Card>
