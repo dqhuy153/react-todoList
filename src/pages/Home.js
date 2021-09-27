@@ -6,7 +6,7 @@ import Input from '../components/UI/Input/Input'
 import iconAddCircle from '../assets/images/add_circle.png'
 import iconKey from '../assets/images/keyboard_tab.png'
 import ToggleSubmit from '../components/UI/ToggleSubmit/ToggleSubmit'
-
+import { NavLink } from 'react-router-dom'
 
 
 const roomTitleReducer = (state, action) => {
@@ -124,14 +124,14 @@ function Home(props) {
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
           {ROOM.createdRooms.slice(0, 4).map(room =>
-            <div className={styles['container__recent--chidl']}>
+            <NavLink to={`/room/${room.id}`} className={styles['container__recent--chidl']}>
 
-              <Card key={room.id} className={`${styles.room} ${styles['own__room--red']}`}>
+              <Card  key={room.id} className={`${styles.room} ${styles['own__room--red']}`}>
                 <p>{room.nameRoom} </p>
 
               </Card>
 
-            </div>
+            </NavLink>
           )}
         </div>
       </div>
