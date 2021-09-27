@@ -1,10 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import styles from './Home.module.scss';
 import Button from '../components/UI/Button/Button';
 import Card from '../components/UI/Card/Card';
 import Input from '../components/UI/Input/Input';
 import iconAddCircle from '../assets/images/add_circle.png';
 import iconKey from '../assets/images/keyboard_tab.png';
+import ToggleSubmit from '../components/UI/ToggleSubmit/ToggleSubmit';
+import { NavLink } from 'react-router-dom';
+
+const roomTitleReducer = (state, action) => {
+  if (action.type === 'USER_INPUT') {
+    return { roomTitle: action.val, isValid: action.val.trim().length > 0 };
+  }
+  if (action.type === 'INPUT_BLUR') {
+    return { value: state.value, isValid: state.value.trim().length > 0 };
+  }
+  return { value: '', isValid: false };
+};
+
+const roomPasswordReducer = (state, action) => {
+  if (action.type === 'USER_INPUT') {
+    return { roomPassword: action.val, isValid: action.val.trim().length > 6 };
+  }
+  if (action.type === 'INPUT_BLUR') {
+    return { value: state.value, isValid: state.value.trim().length > 6 };
+  }
+  return { value: '', isValid: false };
+};
 
 const ROOM = {
   ownRoom: {
@@ -86,12 +108,18 @@ function Home(props) {
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
           {ROOM.createdRooms.slice(0, 4).map((room) => (
-            <div key={room.id} className={styles['container__recent--chidl']}>
-              <Card className={`${styles.room} ${styles['own__room--red']}`}>
+            <NavLink
+              to={`/room/${room.id}`}
+              className={styles['container__recent--chidl']}
+            >
+              <Card
+                key={room.id}
+                className={`${styles.room} ${styles['own__room--red']}`}
+              >
                 <p>{room.nameRoom} </p>
                 <div className={styles.button__edit}>123456789</div>
               </Card>
-            </div>
+            </NavLink>
           ))}
         </div>
       </div>
