@@ -80,12 +80,38 @@ const ROOM = {
 };
 
 function Home(props) {
-  const [countCard, setCoundCard] = useState('');
-  const clickHandler = () => {};
+  const [countCard, setCoundCard] = useState(0);
+  const [showCreateModal, setCreateModal] = useState(false);
+
+  const [formIsValid, setFormIsValid] = useState(false);
+
+  const [emailState, dispatchEmail] = useReducer(roomTitleReducer, {
+    value: '',
+    isValid: false,
+  });
+
+  const [passwordState, dispatchPassword] = useReducer(roomPasswordReducer, {
+    value: '',
+    isValid: false,
+  });
+  useEffect(() => {
+    //the useEffect run after every components render in life cycle
+    console.log('EFFECT RUNNING');
+
+    return () => {
+      console.log('EFFECT CLEANING UP');
+    };
+  }, [passwordState.value]);
+  const showModalCreateHandler = () => {
+    setCreateModal(true);
+  };
+
   const submitHandler = (even) => {
     even.prevenDefault();
     props.onCancel();
   };
+
+  // const createdRoomRender =
 
   return (
     //div
@@ -96,7 +122,10 @@ function Home(props) {
       <div className={styles.container__workspaces}>
         <div className={styles['container__workspaces--head']}>
           <h1>Your WorkSpaces</h1>
-          <Button onClick={clickHandler} className={styles.button__tools}>
+          <Button
+            onClick={showModalCreateHandler}
+            className={styles.button__tools}
+          >
             <img src={iconAddCircle} alt="add icon" />
             Room
           </Button>
@@ -124,7 +153,7 @@ function Home(props) {
         </div>
       </div>
       <div
-        onlick={clickHandler}
+        onlick={showModalCreateHandler}
         className={styles['container__recent--show__rooms']}
       >
         Browser all your created room
@@ -134,7 +163,10 @@ function Home(props) {
       >
         <div className={styles['container__workspaces--bottom']}>
           <h1>Recent joined</h1>
-          <Button onClick={clickHandler} className={styles.button__tools}>
+          <Button
+            onClick={showModalCreateHandler}
+            className={styles.button__tools}
+          >
             <img src={iconKey} alt="add icon" />
             Join
           </Button>
@@ -151,22 +183,24 @@ function Home(props) {
           ))}
         </div>
       </div>
-      <form className={styles.create__room}>
-        <Card className={styles['create__room--field']}>
-          <div className={styles['create__room--field__title']}>
-            Create New Room
-          </div>
-          <hr />
-          <div className={styles['join__room--field__input']}>
-            <Input placeholder="Room title" />
-            <Input placeholder="Room password" />
-          </div>
-          <div className={styles['input__room-create']}>
-            <Button>Cancel</Button>
-            <Button>Create</Button>
-          </div>
-        </Card>
-      </form>
+      {showCreateModal && (
+        <form className={styles.create__room}>
+          <Card className={styles['create__room--field']}>
+            <div className={styles['create__room--field__title']}>
+              Create New Room
+            </div>
+            <hr />
+            <div className={styles['join__room--field__input']}>
+              <Input placeholder="Room title" />
+              <Input placeholder="Room password" />
+            </div>
+            <div className={styles['input__room-create']}>
+              <Button>Cancel</Button>
+              <Button>Create</Button>
+            </div>
+          </Card>
+        </form>
+      )}
 
       {/* <form className={styles.join__room}>
         <Card className={styles['join__room--field']}>
@@ -187,4 +221,5 @@ function Home(props) {
     </div>
   );
 }
-export default Home;
+
+export default React.memo(Home);

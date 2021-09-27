@@ -1,22 +1,22 @@
 .header {
   width: 100%;
-  height: 7rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #ffeddd;
-  padding: 0 8rem;
+  padding: 0 5rem;
   box-shadow: 0 -6px 10px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   position: fixed;
   z-index: 1;
-  top:0;
+  top: 0;
   left: 0;
   right: 0;
 }
 
 .logo {
-  font-size: 2.5rem;
+  font-size: 1.7rem;
   color: rgb(44, 44, 44);
   font-weight: bold;
 }
@@ -35,7 +35,8 @@
 
 .header a {
   text-decoration: none;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
+  font-weight: 500;
   color: #4b4b4b;
 }
 
