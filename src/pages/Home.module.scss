@@ -10,11 +10,10 @@ h1 {
   text-align: center;
   line-height: 80px;
   color: white;
-
 }
 
 .own__room--blue {
-  background-color: #68A4FF !important;
+  background-color: #68a4ff !important;
 }
 
 .own__room--red {
@@ -35,8 +34,7 @@ h1 {
   cursor: pointer;
 }
 
-
-.button__tools>img {
+.button__tools > img {
   padding: 0 8px;
 }
 
@@ -44,7 +42,6 @@ h1 {
   width: 10px;
   // height: 10px;
   border: unset;
-
 }
 
 .container {
@@ -53,7 +50,7 @@ h1 {
   font-family: 'Roboto', sans-serif;
   width: 100%;
   padding: 0 32px;
-  position: relative;
+  // position: relative;
 
   .container__recent--show__rooms {
     text-align: right;
@@ -73,25 +70,19 @@ h1 {
     }
   }
 
-
   .container__recent {
-
     width: 100%;
     height: 200px;
-
-
 
     .container__recent--chidls {
       display: grid;
       grid-template-columns: auto auto auto auto;
       grid-template-rows: auto auto;
       gap: 3px;
-      
 
       .container__recent--chidl {
         text-decoration: none;
         width: 250px;
-
       }
     }
   }
@@ -105,12 +96,15 @@ h1 {
 .create__room,
 .join__room {
   display: block;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   width: 100%;
   z-index: 2;
-
- 
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%;
 
   .create__room--field__title {
     font-size: 24px;
@@ -122,14 +116,12 @@ h1 {
     display: block;
     padding: 0 32px;
   }
-
 }
 
 .input__room-create {
   display: flex;
   flex-direction: row-reverse;
   padding: 0 32px;
-
 }
 
 .create__room--field,
@@ -137,5 +129,4 @@ h1 {
   width: 500px;
   height: 250px;
   margin: auto;
-
 }
