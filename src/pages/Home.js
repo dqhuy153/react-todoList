@@ -126,7 +126,7 @@ function Home(props) {
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
           {ROOM.createdRooms.slice(0, 4).map(room =>
-            <NavLink to={`/room/${room.id}`} className={styles['container__recent--chidl']}>
+            <NavLink to={`/room/${room.id}`} className={styles['container__recent--chidl']} >
 
               <Card  key={room.id} className={`${styles.room} ${styles['own__room--red']}`}>
                 <p>{room.nameRoom} </p>
