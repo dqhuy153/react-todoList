@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { MdEdit } from 'react-icons/md';
 
 import TodoItem from '../todo/TodoItem';
-import Card from '../UI/Card/Card';
 import Button1 from '../UI/Button/Button1';
 import AddTitleRoom from '../UI/Form/AddTitleForm';
 
@@ -118,6 +117,8 @@ export default function BoardItem({
               value={newTaskTitle}
               onSubmit={handleSubmit}
               onClose={handleClose}
+              buttonWidth="60%"
+              buttonFontSize="0.9rem"
             />
           )}
         </li>

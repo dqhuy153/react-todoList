@@ -1,9 +1,16 @@
-import React from "react"
-import styles from './ToggleSubmit.module.scss'
-import Card from '../Card/Card'
-import Button from '../Button/Button'
+import React from 'react';
+import styles from './ToggleSubmit.module.scss';
+import Card from '../Card/Card';
+import Button from '../Button/Button';
 
-const ToggleSubmit = ({ title, nameButton, nameButton1, nameButton2, nameButton3, ...props }) => {
+const ToggleSubmit = ({
+  title,
+  nameButton,
+  nameButton1,
+  nameButton2,
+  nameButton3,
+  ...props
+}) => {
   return (
     <div className={styles.toggle}>
       <form className={styles.create__room}>
@@ -18,9 +25,8 @@ const ToggleSubmit = ({ title, nameButton, nameButton1, nameButton2, nameButton3
           </div>
         </Card>
       </form>
-
     </div>
-  )
-}
+  );
+};
 
-export default ToggleSubmit
+export default ToggleSubmit;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Card from '../UI/Card/Card';
-import AddTitleRoom from '../UI/Form/AddTitleForm';
+import AddTitleForm from '../UI/Form/AddTitleForm';
 import BoardItem from './BoardItem';
 
 import styles from './BoardList.module.scss';
@@ -63,7 +63,7 @@ export default function BoardList({
         )}
         {showNewBoard && (
           <Card className={styles['new-board-form']}>
-            <AddTitleRoom
+            <AddTitleForm
               multiple={true}
               placeholder="Enter board title..."
               buttonText="Add board"
@@ -71,6 +71,8 @@ export default function BoardList({
               value={newBoardTitle}
               onSubmit={handleSubmit}
               onClose={handleClose}
+              buttonWidth="60%"
+              buttonFontSize="0.9rem"
             />
           </Card>
         )}
