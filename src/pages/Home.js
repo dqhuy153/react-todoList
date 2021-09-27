@@ -54,6 +54,14 @@ const ROOM = {
       id: 5,
       nameRoom: 'Room 5',
     },
+    {
+      id: 6,
+      nameRoom: 'Room 6',
+    },
+    {
+      id: 7,
+      nameRoom: 'Room 7',
+    },
   ],
   joinedRooms: [
     {
@@ -136,7 +144,7 @@ function Home(props) {
       </div>
       <div className={styles.container__recent}>
         <div className={styles['container__recent--chidls']}>
-          {ROOM.createdRooms.slice(0, 4).map((room) => (
+          {ROOM.createdRooms.slice(0, 6).map((room) => (
             <NavLink
               to={`/room/${room.id}`}
               className={styles['container__recent--chidl']}
