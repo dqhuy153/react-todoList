@@ -74,11 +74,13 @@ export default function RoomSetting({
                     {member.name}
                   </p>
                 </div>
-                <IoMdClose
-                  size={18}
-                  onClick={() => onRemoveMember(member.id)}
-                  className={styles['tag-member-delete']}
-                />
+                {!member.isCreator && (
+                  <IoMdClose
+                    size={18}
+                    onClick={() => onRemoveMember(member.id)}
+                    className={styles['tag-member-delete']}
+                  />
+                )}
               </li>
             ))}
           </ul>

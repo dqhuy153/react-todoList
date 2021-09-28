@@ -1,16 +1,24 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useContext, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
 import Room from './pages/Room';
+import AuthContext from './store/Auth/auth-context';
 
 // lazy load for using page
 const Home = React.lazy(() => import('./pages/Home'));
 const About = React.lazy(() => import('./pages/About'));
 
 function App() {
+  const authCtx = useContext(AuthContext);
+
+  //dummy assume login
+  useEffect(() => {
+    authCtx.onLogin('Huy', '1234');
+  }, []);
+
   return (
     <Layout>
       <Suspense

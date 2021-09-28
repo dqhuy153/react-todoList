@@ -21,6 +21,7 @@ export default function MemberList({ items, ...props }) {
           <MemberItem
             id={member.id}
             name={member.name}
+            isCreator={member.isCreator}
             firstLetter={getFirstLetterOfName(member.name)}
           />
         </li>

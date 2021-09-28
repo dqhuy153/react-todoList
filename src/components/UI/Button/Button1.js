@@ -6,6 +6,7 @@ export default function Button1({
   buttonWidth = '100%',
   buttonFontSize = '1rem',
   buttonColor = 'var(--primary-color)',
+  buttonFontWeight,
   type,
   onClick,
   disabled,
@@ -19,6 +20,7 @@ export default function Button1({
         '--button-width': buttonWidth,
         '--button-font-size': buttonFontSize,
         '--button-color': buttonColor,
+        '--button-font-weight': buttonFontWeight,
       }}
       type={type || 'button'}
       className={`${classes.button} ${className}`}
