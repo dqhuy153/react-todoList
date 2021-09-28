@@ -19,6 +19,11 @@ export default function AppNavigation({ logoTitle = 'Demo.', ...props }) {
               About
             </NavLink>
           </li>
+          {/* <li>
+            <NavLink to="/signin" activeClassName={styles.active}>
+              Sign In
+            </NavLink>
+          </li> */}
         </ul>
       </nav>
     </header>
