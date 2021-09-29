@@ -1,6 +1,5 @@
 import React, { Suspense, useContext, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
@@ -31,9 +30,6 @@ function App() {
       }
     >
       <Switch>
-        <Route exact path="/">
-          <Signin />
-        </Route>
         <Route exact path="/sign-up">
           <Signup />
         </Route>

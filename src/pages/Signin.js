@@ -1,50 +1,50 @@
-import styles from "./Signin.module.scss";
+import styles from './Signin.module.scss';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { Component } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { Component } from 'react';
 
-import {Redirect, Link } from "react-router-dom";
+import { Redirect, Link } from 'react-router-dom';
 const LOGIN = {
   user: [
     {
       id: 1,
-      name: "xuanchienk58@gmail.com",
-      password: "030620",
+      name: 'xuanchienk58@gmail.com',
+      password: '030620',
     },
     {
       id: 2,
-      name: "dovudung@gmail.com",
-      password: "050320",
+      name: 'dovudung@gmail.com',
+      password: '050320',
     },
     {
       id: 3,
-      name: "dangquanghuy@gmail.com",
-      password: "150399",
+      name: 'dangquanghuy@gmail.com',
+      password: '150399',
     },
     {
       id: 4,
-      name: "truongaxin@gmail.com",
-      password: "123123",
+      name: 'truongaxin@gmail.com',
+      password: '123123',
     },
     {
       id: 5,
-      name: "hoanganhsy@gmail.com",
-      password: "100420",
+      name: 'hoanganhsy@gmail.com',
+      password: '100420',
     },
     {
       id: 6,
-      name: "nguyennhattan@gmail.com",
-      password: "100920",
+      name: 'nguyennhattan@gmail.com',
+      password: '100920',
     },
     {
       id: 7,
-      name: "tranvansy@gmail.com",
-      password: "121120",
+      name: 'tranvansy@gmail.com',
+      password: '121120',
     },
     {
       id: 8,
-      name: "admin",
-      password: "admin",
+      name: 'admin',
+      password: 'admin',
     },
   ],
 };
@@ -52,37 +52,40 @@ export default class Signin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        isRedirect: false,
-      id: "",
-      name: "",
-      password: "",
+      isRedirect: false,
+      id: '',
+      name: '',
+      password: '',
     };
   }
 
   //ham lay gia tri
   isChangeName = (event) => {
-    const name1 = event.target.name; 
-    const value1 = event.target.value; 
+    const name1 = event.target.name;
+    const value1 = event.target.value;
     this.setState({ [name1]: value1 });
-  }
+  };
   isChangePassword = (event) => {
-    const name1 = event.target.name; 
-    const value1 = event.target.value; 
+    const name1 = event.target.name;
+    const value1 = event.target.value;
     this.setState({ [name1]: value1 });
-  }
-checkLogin = () =>{
-    LOGIN.user.find((item)=>{
-        if(item.name === this.state.name && item.password === this.state.password){
-            this.setState({ isRedirect: true });       
-        }         
-    })
-  }
-  render() {
-    if (this.state.isRedirect == true) {
-        return <Redirect to="/home" />;
+  };
+  checkLogin = () => {
+    LOGIN.user.forEach((item) => {
+      if (
+        item.name === this.state.name &&
+        item.password === this.state.password
+      ) {
+        this.setState({ isRedirect: true });
       }
+    });
+  };
+  render() {
+    if (this.state.isRedirect === true) {
+      return <Redirect to="/" />;
+    }
     return (
-    //   <div className={`${styles.login} ${styles.login}`}> {/* cách khai báo nhiều class */}
+      //   <div className={`${styles.login} ${styles.login}`}> {/* cách khai báo nhiều class */}
       <div className={styles.login}>
         <div className={styles.container}>
           <div className={styles.logo}>TodoList.</div>
@@ -103,9 +106,14 @@ checkLogin = () =>{
               placeholder="Enter Password"
             />
 
-            <input onClick={() =>{this.checkLogin()}} type="submit" className={styles.btnLogin} value="Sign In">
-              
-            </input>
+            <input
+              onClick={() => {
+                this.checkLogin();
+              }}
+              type="submit"
+              className={styles.btnLogin}
+              value="Sign In"
+            ></input>
             <hr />
             <div className={styles.footerLogin}>
               <Link to="/forget" href className={styles.forgetPass}>
