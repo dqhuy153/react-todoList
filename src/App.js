@@ -1,10 +1,13 @@
 import React, { Suspense, useContext, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
+import Forgetpass from './pages/Forgetpass';
 import Room from './pages/Room';
+import Signin from './pages/Signin';
+import Signup from './pages/Signup';
 import AuthContext from './store/Auth/auth-context';
 
 // lazy load for using page
@@ -28,6 +31,19 @@ function App() {
       }
     >
       <Switch>
+        <Route exact path="/">
+          <Signin />
+        </Route>
+        <Route exact path="/sign-up">
+          <Signup />
+        </Route>
+        <Route exact path="/sign-in">
+          <Signin />
+        </Route>
+        <Route exact path="/forget">
+          <Forgetpass />
+        </Route>
+
         <Layout>
           <Route path="/" exact>
             <Home />
