@@ -9,6 +9,8 @@ export default function AddTitleForm({
   multiple,
   value,
   buttonText = 'Add',
+  buttonWidth = '100%',
+  buttonFontSize = '1rem',
 
   onChange,
   onClose,
@@ -18,14 +20,20 @@ export default function AddTitleForm({
 }) {
   return (
     <form className={styles.container} onSubmit={onSubmit}>
-      <textarea
+      <input
         placeholder={placeholder}
         onChange={onChange}
         value={value}
-      ></textarea>
+      ></input>
 
       <div className={styles.buttons}>
-        <Button1 type="submit">{buttonText}</Button1>
+        <Button1
+          buttonFontSize={buttonFontSize}
+          buttonWidth={buttonWidth}
+          type="submit"
+        >
+          {buttonText}
+        </Button1>
         <IoMdClose size={20} onClick={onClose} />
       </div>
     </form>

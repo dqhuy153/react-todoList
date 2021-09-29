@@ -1,12 +1,15 @@
 .container {
-  textarea {
+  textarea,
+  input {
     width: 100%;
     padding: 1rem;
     border: 1px solid #aaa;
     border-radius: 5px;
-    font-size: 1.3rem;
-    min-height: 7rem;
+    font-size: 0.9rem;
     resize: none;
+  }
+  textarea {
+    min-height: 7rem;
   }
 
   .buttons {

@@ -10,6 +10,7 @@ const roomInfo = {
   name: 'Room title',
   id: '10',
   password: '123456',
+  userId: 3,
   isCreator: true,
   members: [
     {
@@ -142,10 +143,23 @@ export default function Room(props) {
 
   const { roomId } = useParams();
 
+  useEffect(() => {
+    setMembers(
+      roomInfo.members.map((member) => {
+        return {
+          ...member,
+          isCreator: member.id === roomInfo.userId ? true : false,
+        };
+      })
+    );
+  }, []);
+
+  //member handlers
   const handleRemoveMember = (id) => {
     setMembers((prev) => prev.filter((member) => member.id !== id));
   };
 
+  //board handlers
   const handleCreateNewBoard = (boardTitle) => {
     setBoards((prev) => {
       const updatedBoard = prev;
@@ -158,6 +172,22 @@ export default function Room(props) {
 
       return updatedBoard;
     });
+  };
+
+  const handleSaveBoard = (boardData) => {
+    let updatedBoard = boards.map((board) => {
+      if (board.id === boardData.id) {
+        board.title = boardData.title;
+      }
+
+      return board;
+    });
+
+    setBoards(updatedBoard);
+  };
+
+  const handleDeleteBoard = (boardId) => {
+    setBoards((prev) => prev.filter((board) => board.id !== boardId));
   };
 
   return (
@@ -186,6 +216,8 @@ export default function Room(props) {
         <BoardList
           items={boards}
           onCreateNewBoard={handleCreateNewBoard}
+          onDeleteBoardClick={handleDeleteBoard}
+          onSaveBoardClick={handleSaveBoard}
         ></BoardList>
       </div>
     </div>

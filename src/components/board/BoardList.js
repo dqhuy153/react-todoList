@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Card from '../UI/Card/Card';
-import AddTitleRoom from '../UI/Form/AddTitleForm';
+import AddTitleForm from '../UI/Form/AddTitleForm';
 import BoardItem from './BoardItem';
 
 import styles from './BoardList.module.scss';
@@ -8,14 +8,15 @@ import styles from './BoardList.module.scss';
 export default function BoardList({
   items,
   onCreateNewBoard,
-  onDeleteTaskClick,
-  onEditTaskClick,
-  onTaskStatusChange,
+  onDeleteBoardClick,
+  onSaveBoardClick,
+
   ...props
 }) {
   const [showNewBoard, setShowNewBoard] = useState(false);
   const [newBoardTitle, setNewBoardTitle] = useState('');
 
+  //board handlers
   const handleShowNewBoardForm = () => {
     setShowNewBoard((prev) => !prev);
   };
@@ -24,8 +25,12 @@ export default function BoardList({
     setNewBoardTitle(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitNewBoard = (e) => {
     e.preventDefault();
+
+    if (!newBoardTitle || newBoardTitle.trim() === '') {
+      return alert("Board's title is required!");
+    }
 
     onCreateNewBoard(newBoardTitle);
 
@@ -48,6 +53,8 @@ export default function BoardList({
                 id={board.id}
                 title={board.title}
                 tasksData={board.tasks}
+                onDeleteClick={onDeleteBoardClick}
+                onSaveClick={onSaveBoardClick}
               />
             </Card>
           </li>
@@ -63,14 +70,16 @@ export default function BoardList({
         )}
         {showNewBoard && (
           <Card className={styles['new-board-form']}>
-            <AddTitleRoom
+            <AddTitleForm
               multiple={true}
               placeholder="Enter board title..."
               buttonText="Add board"
               onChange={handleNewBoardChange}
               value={newBoardTitle}
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmitNewBoard}
               onClose={handleClose}
+              buttonWidth="50%"
+              buttonFontSize="0.9rem"
             />
           </Card>
         )}

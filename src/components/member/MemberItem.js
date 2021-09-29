@@ -7,6 +7,7 @@ import styles from './MemberItem.module.scss';
 export default function MemberItem({
   id,
   name,
+  isCreator,
   firstLetter,
   additionItems,
   ...props

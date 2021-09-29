@@ -17,6 +17,12 @@
   align-items: center;
 }
 
+.flex-sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 :root {
   --primary-color: #ffeddd;
   --secondary-color: #0009e5;

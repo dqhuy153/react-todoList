@@ -1,15 +1,21 @@
 .container {
   list-style: none;
   display: flex;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  min-height: 78vh;
+  overflow-x: scroll;
 
   .board-container {
-    width: 25rem;
+    min-width: 17rem;
+    width: 17rem;
     margin-right: 2rem;
   }
 
   .new-board-container {
     text-align: center;
-    width: 20rem;
+    min-width: 15rem;
+    width: 15rem;
 
     .new-board-btn {
       button {
@@ -31,7 +37,7 @@
     }
 
     .new-board-form {
-      padding: 1.5rem;
+      padding: 1.3rem;
     }
   }
 }

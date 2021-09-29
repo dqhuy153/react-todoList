@@ -2,17 +2,32 @@ import React from 'react';
 
 import classes from './Button1.module.scss';
 
-const Button = (props) => {
+export default function Button1({
+  buttonWidth = '100%',
+  buttonFontSize = '1rem',
+  buttonColor = 'var(--primary-color)',
+  buttonFontWeight,
+  type,
+  onClick,
+  disabled,
+  className,
+
+  ...props
+}) {
   return (
     <button
-      type={props.type || 'button'}
-      className={`${classes.button} ${props.className}`}
-      onClick={props.onClick}
-      disabled={props.disabled}
+      style={{
+        '--button-width': buttonWidth,
+        '--button-font-size': buttonFontSize,
+        '--button-color': buttonColor,
+        '--button-font-weight': buttonFontWeight,
+      }}
+      type={type || 'button'}
+      className={`${classes.button} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
     >
       {props.children}
     </button>
   );
-};
-
-export default Button;
+}
