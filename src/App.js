@@ -20,15 +20,15 @@ function App() {
   }, []);
 
   return (
-    <Layout>
-      <Suspense
-        fallback={
-          <div className="centered">
-            <LoadingSpinner />
-          </div>
-        }
-      >
-        <Switch>
+    <Suspense
+      fallback={
+        <div className="centered">
+          <LoadingSpinner />
+        </div>
+      }
+    >
+      <Switch>
+        <Layout>
           <Route path="/" exact>
             <Home />
           </Route>
@@ -38,9 +38,9 @@ function App() {
           <Route path="/about">
             <About />
           </Route>
-        </Switch>
-      </Suspense>
-    </Layout>
+        </Layout>
+      </Switch>
+    </Suspense>
   );
 }
 

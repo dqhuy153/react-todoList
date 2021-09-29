@@ -23,6 +23,7 @@ export const AuthContextProvider = (props) => {
 
   const loginHandler = (email, password) => {
     // check email and password
+
     //assume pass
 
     localStorage.setItem('isLoggedIn', '1');
