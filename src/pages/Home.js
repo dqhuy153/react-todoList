@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import styles from './Home.module.scss';
-import Button from '../components/UI/Button/Button';
 import Card from '../components/UI/Card/Card';
 import Input from '../components/UI/Input/Input';
 import iconAddCircle from '../assets/images/add_circle.png';
 import iconKey from '../assets/images/keyboard_tab.png';
-import ToggleSubmit from '../components/UI/ToggleSubmit/ToggleSubmit';
+
 import { NavLink } from 'react-router-dom';
+import RoomList from '../components/room/RoomList';
+import Modal1 from '../components/UI/Modal/Modal1';
+
+import styles from './Home.module.scss';
 
 const roomTitleReducer = (state, action) => {
   if (action.type === 'USER_INPUT') {
@@ -65,31 +67,26 @@ const ROOM = {
   ],
   joinedRooms: [
     {
-      id: 1,
-      nameRoom: 'Room huy',
+      id: 8,
+      nameRoom: 'Room Huy',
     },
     {
-      id: 2,
-      nameRoom: 'Room 2',
+      id: 9,
+      nameRoom: 'Room Chien',
     },
     {
-      id: 3,
-      nameRoom: 'Room 3',
-    },
-    {
-      id: 4,
-      nameRoom: 'Room 4',
-    },
-    {
-      id: 5,
-      nameRoom: 'Room 5',
+      id: 101,
+      nameRoom: 'Room Andy',
     },
   ],
 };
 
 function Home(props) {
-  const [countCard, setCoundCard] = useState(0);
   const [showCreateModal, setCreateModal] = useState(false);
+  const [showJoinModal, setJoinModal] = useState(false);
+
+  const [showFullCreatedRoom, setShowFullCreatedRoom] = useState(false);
+  const [showFullJoinedRoom, setShowFullJoinedRoom] = useState(false);
 
   const [formIsValid, setFormIsValid] = useState(false);
 
@@ -102,6 +99,7 @@ function Home(props) {
     value: '',
     isValid: false,
   });
+
   useEffect(() => {
     //the useEffect run after every components render in life cycle
     console.log('EFFECT RUNNING');
@@ -110,123 +108,204 @@ function Home(props) {
       console.log('EFFECT CLEANING UP');
     };
   }, [passwordState.value]);
+
+  //show/hide full room handlers
+  const handleToggleFullCreatedRoom = () => {
+    setShowFullCreatedRoom((prev) => !prev);
+  };
+
+  const handleToggleFullJoinedRoom = () => {
+    setShowFullJoinedRoom((prev) => !prev);
+  };
+
   const showModalCreateHandler = () => {
     setCreateModal(true);
   };
 
-  const submitHandler = (even) => {
-    even.prevenDefault();
+  const hideModalCreateHandler = () => {
+    setCreateModal(false);
+  };
+
+  const showModalJoinHandler = () => {
+    setJoinModal(true);
+  };
+
+  const hideModalJoinHandler = () => {
+    setJoinModal(false);
+  };
+
+  //create new room handlers
+  const handleRoomTitleChange = (e) => {};
+  const handleRoomPasswordChange = (e) => {};
+
+  const handleCreateNewRoom = () => {
     props.onCancel();
   };
+
+  const handleJoinNewRoom = () => {};
 
   // const createdRoomRender =
 
   return (
-    //div
-    //
-    
     // workspace
     <div className={styles.container}>
       {/*your workspaces */}
+      {/* title */}
       <div className={styles.container__workspaces}>
         <div className={styles['container__workspaces--head']}>
           <h1>Your WorkSpaces</h1>
-          <Button
-            onClick={showModalCreateHandler}
-            className={styles.button__tools}
-          >
-            <img src={iconAddCircle} alt="add icon" />
-            Room
-          </Button>
-        </div>
-        <Card className={`${styles.room} ${styles['own__room--blue']}`}>
-          {ROOM.ownRoom.nameRoom}
-        </Card>
-      </div>
-      <div className={styles.container__recent}>
-        <div className={styles['container__recent--chidls']}>
-          {ROOM.createdRooms.slice(0, 6).map((room) => (
-            <NavLink
-              to={`/room/${room.id}`}
-              className={styles['container__recent--chidl']}
+          <Card className={styles['btn-card']}>
+            <button
+              onClick={showModalCreateHandler}
+              className={styles.button__tools}
             >
-              <Card
-                key={room.id}
-                className={`${styles.room} ${styles['own__room--red']}`}
-              >
-                <p>{room.nameRoom} </p>
-                <div className={styles.button__edit}>123456789</div>
-              </Card>
-            </NavLink>
-          ))}
+              <img src={iconAddCircle} alt="add icon" />
+              Room
+            </button>
+          </Card>
         </div>
       </div>
-      <div
-        onlick={showModalCreateHandler}
-        className={styles['container__recent--show__rooms']}
-      >
-        Browser all your created room
-      </div>
+      {/* own room */}
+      <Card className={`${styles.room} ${styles['own__room--blue']}`}>
+        <NavLink
+          to={`/room/${ROOM.ownRoom.id}`}
+          className={styles['room_link']}
+        >
+          <p>{ROOM.ownRoom.nameRoom}</p>
+        </NavLink>
+      </Card>
+      {/* created rooms */}
+      {/* minimal room list */}
+      {!showFullCreatedRoom && (
+        <div className={styles.room_list}>
+          <RoomList
+            items={ROOM.createdRooms.slice(0, 4)}
+            backgroundColor="#ff6868"
+            textColor="#fff"
+          />
+        </div>
+      )}
+      {/* full room list */}
+      {showFullCreatedRoom && (
+        <div className={styles.room_list}>
+          <RoomList
+            items={ROOM.createdRooms}
+            backgroundColor="#ff6868"
+            textColor="#fff"
+          />
+        </div>
+      )}
+      {/* show browser all if has 5 room or more */}
+      {ROOM.createdRooms.length > 4 && (
+        <div>
+          <button
+            onClick={handleToggleFullCreatedRoom}
+            className={styles['container__recent--show__rooms']}
+          >
+            {!showFullCreatedRoom
+              ? 'Browser all your created room'
+              : 'Show less'}
+          </button>
+        </div>
+      )}
+      {/* recent joined rooms */}
       <div
         className={`${styles.container__workspaces} ${styles.container__bottom}`}
       >
         <div className={styles['container__workspaces--bottom']}>
           <h1>Recent joined</h1>
-          <Button
-            onClick={showModalCreateHandler}
-            className={styles.button__tools}
-          >
-            <img src={iconKey} alt="add icon" />
-            Join
-          </Button>
-        </div>
-      </div>
-      <div className={styles.container__recent}>
-        <div className={styles['container__recent--chidls']}>
-          {ROOM.joinedRooms.slice(0, 4).map((room) => (
-            <div className={styles['container__recent--chidl']}>
-              <Card className={`${styles.room} ${styles['own__room--organ']}`}>
-                <p>{room.nameRoom} </p>
-              </Card>
-            </div>
-          ))}
-        </div>
-      </div>
-      {showCreateModal && (
-        <form className={styles.create__room}>
-          <Card className={styles['create__room--field']}>
-            <div className={styles['create__room--field__title']}>
-              Create New Room
-            </div>
-            <hr />
-            <div className={styles['join__room--field__input']}>
-              <Input placeholder="Room title" />
-              <Input placeholder="Room password" />
-            </div>
-            <div className={styles['input__room-create']}>
-              <Button>Cancel</Button>
-              <Button>Create</Button>
-            </div>
+          <Card className={styles['btn-card']}>
+            <button
+              onClick={showModalJoinHandler}
+              className={styles.button__tools}
+            >
+              <img src={iconKey} alt="add icon" />
+              Join
+            </button>
           </Card>
-        </form>
+        </div>
+
+        <div className={styles.room_list}>
+          {/* minimal room list */}
+          {!showFullJoinedRoom && (
+            <RoomList
+              items={ROOM.joinedRooms.slice(0, 4)}
+              backgroundColor="#ff8368"
+              textColor="#fff"
+            />
+          )}
+          {/* full room list */}
+          {showFullJoinedRoom && (
+            <RoomList
+              items={ROOM.joinedRooms}
+              backgroundColor="#ff8368"
+              textColor="#fff"
+            />
+          )}
+        </div>
+        {/* show browser all if has 5 room or more */}
+        {ROOM.joinedRooms.length > 4 && (
+          <button
+            onClick={handleToggleFullJoinedRoom}
+            className={styles['container__recent--show__rooms']}
+          >
+            {!showFullJoinedRoom ? 'Browser all your joined room' : 'Show less'}
+          </button>
+        )}
+      </div>
+      {/* create new room modal */}
+      {showCreateModal && (
+        <Modal1
+          title="Crate New Room"
+          btn1="Cancel"
+          btn1Color="#DADADA"
+          btn1Width="25%"
+          onBtn1Click={hideModalCreateHandler}
+          btn2="Create"
+          btn2Color="var(--primary-color)"
+          btn2Width="25%"
+          onBtn2Click={handleCreateNewRoom}
+          onCloseClick={hideModalCreateHandler}
+          onBackdropClick={hideModalCreateHandler}
+          btnFontWeight="500"
+        >
+          <div className={styles['join__room--field__input']}>
+            <Input onChange={handleRoomTitleChange} placeholder="Room title" />
+            <Input
+              onChange={handleRoomPasswordChange}
+              type="password"
+              placeholder="Room password"
+            />
+          </div>
+        </Modal1>
       )}
 
-      {/* <form className={styles.join__room}>
-        <Card className={styles['join__room--field']}>
-          <div className={styles['create__room--field__title']}>Join a Room</div>
-          <hr />
+      {/* join new room modal */}
+      {showJoinModal && (
+        <Modal1
+          title="Join a Room"
+          btn1="Cancel"
+          btn1Color="#DADADA"
+          btn1Width="25%"
+          onBtn1Click={hideModalJoinHandler}
+          btn2="Join"
+          btn2Color="var(--primary-color)"
+          btn2Width="25%"
+          onBtn2Click={handleJoinNewRoom}
+          onCloseClick={hideModalJoinHandler}
+          onBackdropClick={hideModalJoinHandler}
+          btnFontWeight="500"
+        >
           <div className={styles['join__room--field__input']}>
-            <Input />
-            <Input />
-            <input placeholder="check"/>
-
+            <Input onChange={handleRoomTitleChange} placeholder="Room ID" />
+            <Input
+              onChange={handleRoomPasswordChange}
+              type="password"
+              placeholder="Room password"
+            />
           </div>
-          <div className={styles['input__room-create']}>
-            <Button >Cancel</Button>
-            <Button>Join</Button>
-          </div>
-        </Card>
-      </form> */}
+        </Modal1>
+      )}
     </div>
   );
 }

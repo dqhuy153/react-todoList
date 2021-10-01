@@ -6,7 +6,11 @@ import styles from './AppNavigation.module.scss';
 export default function AppNavigation({ logoTitle = 'Demo.', ...props }) {
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>{logoTitle}</div>
+      <div className={styles.logo}>
+        <NavLink to="/" exact>
+          {logoTitle}
+        </NavLink>
+      </div>
       <nav>
         <ul>
           <li>

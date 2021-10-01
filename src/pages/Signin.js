@@ -1,6 +1,6 @@
 import styles from './Signin.module.scss';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from 'react';
 
 import { Redirect, Link } from 'react-router-dom';
