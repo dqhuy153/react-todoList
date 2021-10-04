@@ -184,7 +184,7 @@ function Home(props) {
       {!showFullCreatedRoom && (
         <div className={styles.room_list}>
           <RoomList
-            items={ROOM.createdRooms.slice(0, 4)}
+            items={ROOM.createdRooms?.slice(0, 4)}
             backgroundColor="#ff6868"
             textColor="#fff"
           />
