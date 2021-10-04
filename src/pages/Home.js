@@ -172,20 +172,20 @@ function Home(props) {
         </div>
       </div>
       {/* own room */}
-      <Card className={`${styles.room} ${styles['own__room--blue']}`}>
+      {/* <Card className={`${styles.room} ${styles['own__room--blue']}`}>
         <NavLink
           to={`/room/0`}
           className={styles['room_link']}
         >
           <p>{ROOM.ownRoom.nameRoom}</p>
         </NavLink>
-      </Card>
+      </Card> */}
       {/* created rooms */}
       {/* minimal room list */}
       {!showFullCreatedRoom && (
         <div className={styles.room_list}>
           <RoomList
-            items={ROOM.createdRooms.slice(0, 4)}
+            items={ROOM.createdRooms?.slice(0, 4)}
             backgroundColor="#ff6868"
             textColor="#fff"
           />
