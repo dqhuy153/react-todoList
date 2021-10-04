@@ -2,3 +2,9 @@
   padding-top: 6rem;
   padding-left: 18rem;
 }
+
+@media screen and (max-width: 1025px) {
+  .main {
+    padding-left: 0;
+  }
+}

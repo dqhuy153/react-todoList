@@ -1,14 +1,13 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-
-import Card from '../UI/Card/Card';
 
 import styles from './RoomList.module.scss';
+import RoomItem from './RoomItem';
 
 export default function RoomList({
   items,
   backgroundColor,
   textColor,
+  showOption = true,
   ...props
 }) {
   return (
@@ -19,20 +18,18 @@ export default function RoomList({
         '--text-color': textColor,
       }}
     >
-      <div className={styles['container__recent--childs']}>
+      <ul className={styles['container__recent--childs']}>
         {items.map((room) => (
-          <div key={room.id} className={styles['container__recent--child']}>
-            <NavLink
-              to={`/room/${room.id}`}
-              className={styles['container__recent--child']}
-            >
-              <Card className={`${styles.room} ${styles['own__room--organ']}`}>
-                <p>{room.nameRoom} </p>
-              </Card>
-            </NavLink>
-          </div>
+          <li key={room.id} className={styles['container__recent--child']}>
+            <RoomItem
+              id={room.id}
+              nameRoom={room.nameRoom}
+              showOption={showOption}
+              password={room.password}
+            />
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

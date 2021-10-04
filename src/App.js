@@ -1,24 +1,39 @@
 import React, { Suspense, useContext, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
-import Forgetpass from './pages/Forgetpass';
-import Room from './pages/Room';
-import Signin from './pages/Signin';
-import Signup from './pages/Signup';
 import AuthContext from './store/Auth/auth-context';
 
 // lazy load for using page
 const Home = React.lazy(() => import('./pages/Home'));
 const About = React.lazy(() => import('./pages/About'));
+const Signin = React.lazy(() => import('./pages/Signin'));
+const Signup = React.lazy(() => import('./pages/Signup'));
+const Room = React.lazy(() => import('./pages/Room'));
+const Forgetpass = React.lazy(() => import('./pages/Forgetpass'));
 
 function App() {
   const authCtx = useContext(AuthContext);
 
-  //dummy assume login
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+  const username = localStorage.getItem('username');
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  //authentication check here
   useEffect(() => {
-    authCtx.onLogin('Huy', '1234');
+    if (!token || !userId || !username || !isLoggedIn) {
+      authCtx.setIsLoggedIn(false);
+      authCtx.setUserInfo(null);
+    } else {
+      authCtx.setUserInfo({
+        userId,
+        username,
+        token,
+      });
+      authCtx.setIsLoggedIn(true);
+    }
   }, []);
 
   return (
@@ -40,17 +55,21 @@ function App() {
           <Forgetpass />
         </Route>
 
-        <Layout>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/room/:roomId">
-            <Room />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-        </Layout>
+        {isLoggedIn && token && userId && username ? (
+          <Layout>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/room/:roomId">
+              <Room />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+          </Layout>
+        ) : (
+          <Redirect to="/sign-in" />
+        )}
       </Switch>
     </Suspense>
   );

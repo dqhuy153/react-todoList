@@ -1,40 +1,91 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { MdDashboard, MdKeyboardTab } from 'react-icons/md';
 import { BsPlusCircleFill, BsGrid3X3GapFill } from 'react-icons/bs';
+import DataContext from '../../store/data/data-context';
 
 import styles from './SideBar.module.scss';
 import Modal1 from '../UI/Modal/Modal1';
 import Input from '../UI/Input/Input';
 
 export default function SideBar(props) {
-  const [showCreateModal, setCreateModal] = useState(false);
-  const [showJoinModal, setJoinModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+
+  const [titleCreateRoom, setTitleCreateRoom] = useState();
+  const [passwordCreateRoom, setPasswordCreateRoom] = useState();
+  const [idJoinRoom, setIdJoinRoom] = useState();
+  const [passwordJoinRoom, setPasswordJoinRoom] = useState();
+
+  const dataCtx = useContext(DataContext);
 
   const showModalCreateHandler = () => {
-    setCreateModal(true);
+    setShowCreateModal(true);
   };
 
   const hideModalCreateHandler = () => {
-    setCreateModal(false);
+    setShowCreateModal(false);
   };
 
   const showModalJoinHandler = () => {
-    setJoinModal(true);
+    setShowJoinModal(true);
   };
 
   const hideModalJoinHandler = () => {
-    setJoinModal(false);
+    setShowJoinModal(false);
   };
 
   //create new room handlers
-  const handleRoomTitleChange = (e) => {};
-  const handleRoomPasswordChange = (e) => {};
-
-  const handleCreateNewRoom = () => {
-    props.onCancel();
+  const handleRoomTitleChange = (e) => {
+    setTitleCreateRoom(e.target.value);
+  };
+  const handleRoomPasswordChange = (e) => {
+    setPasswordCreateRoom(e.target.value);
   };
 
-  const handleJoinNewRoom = () => {};
+  const handleCreateNewRoom = () => {
+    if (!titleCreateRoom || titleCreateRoom.trim().length === 0) {
+      return alert('Room title is required!');
+    }
+
+    if (!passwordCreateRoom || passwordCreateRoom.trim().length === 0) {
+      return alert('Room password is required!');
+    }
+
+    if (!passwordCreateRoom || passwordCreateRoom.trim().length < 5) {
+      return alert("Minimum length's password is 5!");
+    }
+
+    dataCtx.onCreateRoom(titleCreateRoom, passwordCreateRoom, true);
+
+    setTitleCreateRoom('');
+    setPasswordCreateRoom('');
+
+    setShowCreateModal(false);
+  };
+
+  //join room handlers
+  const handleJoinRoomIdChange = (e) => {
+    setIdJoinRoom(e.target.value);
+  };
+  const handleJoinRoomPasswordChange = (e) => {
+    setPasswordJoinRoom(e.target.value);
+  };
+  const handleJoinNewRoom = () => {
+    if (!idJoinRoom || idJoinRoom.trim().length === 0) {
+      return alert('Room title is required!');
+    }
+
+    if (!passwordJoinRoom || passwordJoinRoom.trim().length === 0) {
+      return alert('Room password is required!');
+    }
+
+    dataCtx.onJoinRoom(idJoinRoom, passwordJoinRoom, true);
+
+    setIdJoinRoom('');
+    setPasswordJoinRoom('');
+
+    setShowJoinModal(false);
+  };
 
   return (
     <div className={styles.container}>
@@ -55,6 +106,7 @@ export default function SideBar(props) {
         <li className={styles.active}>
           <BsGrid3X3GapFill size={23} />
           <p>Recent Rooms</p>
+          {/* recent room list */}
         </li>
       </ul>
       {/* modals */}
@@ -75,11 +127,16 @@ export default function SideBar(props) {
           btnFontWeight="500"
         >
           <div className={styles['join__room--field__input']}>
-            <Input onChange={handleRoomTitleChange} placeholder="Room title" />
+            <Input
+              onChange={handleRoomTitleChange}
+              placeholder="Room title"
+              value={titleCreateRoom}
+            />
             <Input
               onChange={handleRoomPasswordChange}
               type="password"
               placeholder="Room password"
+              value={passwordCreateRoom}
             />
           </div>
         </Modal1>
@@ -101,11 +158,16 @@ export default function SideBar(props) {
           btnFontWeight="500"
         >
           <div className={styles['join__room--field__input']}>
-            <Input onChange={handleRoomTitleChange} placeholder="Room ID" />
             <Input
-              onChange={handleRoomPasswordChange}
+              onChange={handleJoinRoomIdChange}
+              placeholder="Room ID"
+              value={idJoinRoom}
+            />
+            <Input
+              onChange={handleJoinRoomPasswordChange}
               type="password"
               placeholder="Room password"
+              value={passwordJoinRoom}
             />
           </div>
         </Modal1>

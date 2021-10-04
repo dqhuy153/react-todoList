@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 import Card from '../components/UI/Card/Card';
 import Input from '../components/UI/Input/Input';
 import iconAddCircle from '../assets/images/add_circle.png';
@@ -9,105 +9,64 @@ import RoomList from '../components/room/RoomList';
 import Modal1 from '../components/UI/Modal/Modal1';
 
 import styles from './Home.module.scss';
+import DataContext from '../store/data/data-context';
 
-const roomTitleReducer = (state, action) => {
-  if (action.type === 'USER_INPUT') {
-    return { roomTitle: action.val, isValid: action.val.trim().length > 0 };
-  }
-  if (action.type === 'INPUT_BLUR') {
-    return { value: state.value, isValid: state.value.trim().length > 0 };
-  }
-  return { value: '', isValid: false };
-};
+// const roomTitleReducer = (state, action) => {
+//   if (action.type === 'USER_INPUT') {
+//     return { roomTitle: action.val, isValid: action.val.trim().length > 0 };
+//   }
+//   if (action.type === 'INPUT_BLUR') {
+//     return { value: state.value, isValid: state.value.trim().length > 0 };
+//   }
+//   return { value: '', isValid: false };
+// };
 
-const roomPasswordReducer = (state, action) => {
-  if (action.type === 'USER_INPUT') {
-    return { roomPassword: action.val, isValid: action.val.trim().length > 6 };
-  }
-  if (action.type === 'INPUT_BLUR') {
-    return { value: state.value, isValid: state.value.trim().length > 6 };
-  }
-  return { value: '', isValid: false };
-};
-
-const ROOM = {
-  ownRoom: {
-    id: 0,
-    nameRoom: 'Name your own',
-  },
-  createdRooms: [
-    {
-      id: 1,
-      nameRoom: 'Room 1',
-    },
-    {
-      id: 2,
-      nameRoom: 'Room 2',
-    },
-    {
-      id: 3,
-      nameRoom: 'Room 3',
-    },
-    {
-      id: 4,
-      nameRoom: 'Room 4',
-    },
-    {
-      id: 5,
-      nameRoom: 'Room 5',
-    },
-    {
-      id: 6,
-      nameRoom: 'Room 6',
-    },
-    {
-      id: 7,
-      nameRoom: 'Room 7',
-    },
-  ],
-  joinedRooms: [
-    {
-      id: 8,
-      nameRoom: 'Room Huy',
-    },
-    {
-      id: 9,
-      nameRoom: 'Room Chien',
-    },
-    {
-      id: 101,
-      nameRoom: 'Room Andy',
-    },
-  ],
-};
+// const roomPasswordReducer = (state, action) => {
+//   if (action.type === 'USER_INPUT') {
+//     return { roomPassword: action.val, isValid: action.val.trim().length > 6 };
+//   }
+//   if (action.type === 'INPUT_BLUR') {
+//     return { value: state.value, isValid: state.value.trim().length > 6 };
+//   }
+//   return { value: '', isValid: false };
+// };
 
 function Home(props) {
-  const [showCreateModal, setCreateModal] = useState(false);
-  const [showJoinModal, setJoinModal] = useState(false);
+  const dataCtx = useContext(DataContext);
+
+  const ROOM = dataCtx.roomsData;
+
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
 
   const [showFullCreatedRoom, setShowFullCreatedRoom] = useState(false);
   const [showFullJoinedRoom, setShowFullJoinedRoom] = useState(false);
 
-  const [formIsValid, setFormIsValid] = useState(false);
+  const [titleCreateRoom, setTitleCreateRoom] = useState();
+  const [passwordCreateRoom, setPasswordCreateRoom] = useState();
+  const [idJoinRoom, setIdJoinRoom] = useState();
+  const [passwordJoinRoom, setPasswordJoinRoom] = useState();
 
-  const [emailState, dispatchEmail] = useReducer(roomTitleReducer, {
-    value: '',
-    isValid: false,
-  });
+  // const [formIsValid, setFormIsValid] = useState(false);
 
-  const [passwordState, dispatchPassword] = useReducer(roomPasswordReducer, {
-    value: '',
-    isValid: false,
-  });
+  // const [emailState, dispatchEmail] = useReducer(roomTitleReducer, {
+  //   value: '',
+  //   isValid: false,
+  // });
 
-  useEffect(() => {
-    //the useEffect run after every components render in life cycle
-    console.log('EFFECT RUNNING');
+  // const [passwordState, dispatchPassword] = useReducer(roomPasswordReducer, {
+  //   value: '',
+  //   isValid: false,
+  // });
 
-    return () => {
-      console.log('EFFECT CLEANING UP');
-    };
-  }, [passwordState.value]);
+  // useEffect(() => {
+  //   //the useEffect run after every components render in life cycle
+  //   console.log('EFFECT RUNNING');
+
+  //   return () => {
+  //     console.log('EFFECT CLEANING UP');
+  //   };
+  // }, [passwordState.value]);
 
   //show/hide full room handlers
   const handleToggleFullCreatedRoom = () => {
@@ -119,32 +78,79 @@ function Home(props) {
   };
 
   const showModalCreateHandler = () => {
-    setCreateModal(true);
+    setShowCreateModal(true);
   };
 
   const hideModalCreateHandler = () => {
-    setCreateModal(false);
+    setShowCreateModal(false);
   };
 
   const showModalJoinHandler = () => {
-    setJoinModal(true);
+    setShowJoinModal(true);
   };
 
   const hideModalJoinHandler = () => {
-    setJoinModal(false);
+    setShowJoinModal(false);
   };
 
   //create new room handlers
-  const handleRoomTitleChange = (e) => {};
-  const handleRoomPasswordChange = (e) => {};
-
-  const handleCreateNewRoom = () => {
-    props.onCancel();
+  const handleRoomTitleChange = (e) => {
+    setTitleCreateRoom(e.target.value);
+  };
+  const handleRoomPasswordChange = (e) => {
+    setPasswordCreateRoom(e.target.value);
   };
 
-  const handleJoinNewRoom = () => {};
+  const handleCreateNewRoom = () => {
+    if (!titleCreateRoom || titleCreateRoom.trim().length === 0) {
+      return alert('Room title is required!');
+    }
 
-  // const createdRoomRender =
+    if (!passwordCreateRoom || passwordCreateRoom.trim().length === 0) {
+      return alert('Room password is required!');
+    }
+
+    if (!passwordCreateRoom || passwordCreateRoom.trim().length < 5) {
+      return alert("Minimum length's password is 5!");
+    }
+
+    dataCtx.onCreateRoom(titleCreateRoom, passwordCreateRoom, true);
+
+    setTitleCreateRoom('');
+    setPasswordCreateRoom('');
+
+    setShowCreateModal(false);
+  };
+
+  //edit room handler
+
+  //delete room handler
+
+  //join room handlers
+  const handleJoinRoomIdChange = (e) => {
+    setIdJoinRoom(e.target.value);
+  };
+  const handleJoinRoomPasswordChange = (e) => {
+    setPasswordJoinRoom(e.target.value);
+  };
+  const handleJoinNewRoom = () => {
+    if (!idJoinRoom || idJoinRoom.trim().length === 0) {
+      return alert('Room title is required!');
+    }
+
+    if (!passwordJoinRoom || passwordJoinRoom.trim().length === 0) {
+      return alert('Room password is required!');
+    }
+
+    dataCtx.onJoinRoom(idJoinRoom, passwordJoinRoom, true);
+
+    setIdJoinRoom('');
+    setPasswordJoinRoom('');
+
+    setShowJoinModal(false);
+  };
+
+  //leave room handler
 
   return (
     // workspace
@@ -232,6 +238,7 @@ function Home(props) {
               items={ROOM.joinedRooms.slice(0, 4)}
               backgroundColor="#ff8368"
               textColor="#fff"
+              showOption={false}
             />
           )}
           {/* full room list */}
@@ -240,6 +247,7 @@ function Home(props) {
               items={ROOM.joinedRooms}
               backgroundColor="#ff8368"
               textColor="#fff"
+              showOption={false}
             />
           )}
         </div>
@@ -270,11 +278,16 @@ function Home(props) {
           btnFontWeight="500"
         >
           <div className={styles['join__room--field__input']}>
-            <Input onChange={handleRoomTitleChange} placeholder="Room title" />
+            <Input
+              onChange={handleRoomTitleChange}
+              placeholder="Room title"
+              value={titleCreateRoom}
+            />
             <Input
               onChange={handleRoomPasswordChange}
               type="password"
               placeholder="Room password"
+              value={passwordCreateRoom}
             />
           </div>
         </Modal1>
@@ -297,11 +310,16 @@ function Home(props) {
           btnFontWeight="500"
         >
           <div className={styles['join__room--field__input']}>
-            <Input onChange={handleRoomTitleChange} placeholder="Room ID" />
             <Input
-              onChange={handleRoomPasswordChange}
+              onChange={handleJoinRoomIdChange}
+              placeholder="Room ID"
+              value={idJoinRoom}
+            />
+            <Input
+              onChange={handleJoinRoomPasswordChange}
               type="password"
               placeholder="Room password"
+              value={passwordJoinRoom}
             />
           </div>
         </Modal1>

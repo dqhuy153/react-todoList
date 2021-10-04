@@ -6,6 +6,10 @@
   position: relative;
   z-index: 1;
 
+  svg {
+    cursor: pointer;
+  }
+
   .icon {
     color: #000;
     font-weight: 500;
@@ -41,10 +45,6 @@
 
       span {
         font-size: 1.3rem;
-      }
-
-      .eye-icon {
-        cursor: pointer;
       }
     }
 

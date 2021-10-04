@@ -5,12 +5,16 @@ h1 {
 }
 
 .room {
-  // max-width: 250px;
-  height: 100px;
+  height: 120px;
   text-align: center;
-  line-height: 100px;
+  line-height: 120px;
   color: white;
   margin-bottom: 3rem;
+
+  &:hover {
+    transform: scale(1.05);
+    transition: all 0.2s linear;
+  }
 }
 
 .own__room--blue {
