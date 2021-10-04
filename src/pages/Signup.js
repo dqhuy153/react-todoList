@@ -43,26 +43,6 @@ export default class Signup extends Component {
           <div className={styles.logo}>TodoList.</div>
           <form
             className={styles.row}
-            onSubmit={() => {
-              if (
-                !this.state.username ||
-                !this.state.password ||
-                this.state.username.trim() === '' ||
-                this.state.password.trim() === ''
-              ) {
-                return alert('Please fill all required fields!');
-              }
-
-              if (this.state.password.length < 6) {
-                return alert('Minimum length of password is 6');
-              }
-
-              if (this.state.password !== this.state.confirmPassword) {
-                return alert('Confirm password not match!');
-              }
-
-              onSignup(this.state.username, this.state.password);
-            }}
           >
             <div className={styles.title}> Sign up to Todos </div>
             <input
@@ -95,7 +75,26 @@ export default class Signup extends Component {
               onChange={(event) => this.isChangeConfirmPassword(event)}
             />
 
-            <button type="submit" className={styles.btnLogin}>
+            <button onClick={() => {
+              if (
+                !this.state.username ||
+                !this.state.password ||
+                this.state.username.trim() === '' ||
+                this.state.password.trim() === ''
+              ) {
+                return alert('Please fill all required fields!');
+              }
+
+              if (this.state.password.length < 6) {
+                return alert('Minimum length of password is 6');
+              }
+
+              if (this.state.password !== this.state.confirmPassword) {
+                return alert('Confirm password not match!');
+              }
+
+              onSignup(this.state.username, this.state.password);
+            }} className={styles.btnLogin}>
               Sign Up
             </button>
             <hr />
