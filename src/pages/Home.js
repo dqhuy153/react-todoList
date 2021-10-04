@@ -174,7 +174,7 @@ function Home(props) {
       {/* own room */}
       <Card className={`${styles.room} ${styles['own__room--blue']}`}>
         <NavLink
-          to={`/room/${ROOM.ownRoom.id}`}
+          to={`/room/0`}
           className={styles['room_link']}
         >
           <p>{ROOM.ownRoom.nameRoom}</p>
