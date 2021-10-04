@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Card from '../components/UI/Card/Card';
 import Input from '../components/UI/Input/Input';
 import iconAddCircle from '../assets/images/add_circle.png';
 import iconKey from '../assets/images/keyboard_tab.png';
 
-import { NavLink } from 'react-router-dom';
 import RoomList from '../components/room/RoomList';
 import Modal1 from '../components/UI/Modal/Modal1';
 
@@ -172,14 +171,14 @@ function Home(props) {
         </div>
       </div>
       {/* own room */}
-      <Card className={`${styles.room} ${styles['own__room--blue']}`}>
+      {/* <Card className={`${styles.room} ${styles['own__room--blue']}`}>
         <NavLink
           to={`/room/0`}
           className={styles['room_link']}
         >
           <p>{ROOM.ownRoom.nameRoom}</p>
         </NavLink>
-      </Card>
+      </Card> */}
       {/* created rooms */}
       {/* minimal room list */}
       {!showFullCreatedRoom && (
