@@ -32,7 +32,7 @@ export const AuthContextProvider = (props) => {
       return alert('Please fill all blank fields!');
     }
     // check email and password
-    // const response = await fetch('http://localhost:8080/auth/login', {
+    // const response = await fetch('http://localhost:8080/api/login', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({
@@ -88,7 +88,7 @@ export const AuthContextProvider = (props) => {
       return alert('Please fill all required fields!');
     }
 
-    // const response = await fetch('http://localhost:8080/auth/sign-up', {
+    // const response = await fetch('http://localhost:8080/api/sign-up', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({
@@ -101,7 +101,7 @@ export const AuthContextProvider = (props) => {
     //   return alert('Send request to server failed!');
     // }
 
-    // const data = (await response.json());
+    // const data = await response.json();
 
     // if (!data || !data.status) {
     //   return alert('Signup fail! Try another username!');
