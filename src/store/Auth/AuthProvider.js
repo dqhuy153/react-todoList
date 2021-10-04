@@ -32,33 +32,41 @@ export const AuthContextProvider = (props) => {
       return alert('Please fill all blank fields!');
     }
     // check email and password
-    const response = await fetch('http://localhost:8080/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
+    let data;
 
-    if (!response) {
-      return alert('Send request to server failed!');
+    try {
+      //api data
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      data = await response.json();
+
+      //get data response
+      if (!data || data.status || data.statusCode) {
+        return alert('Login fail! Incorrect username or password!');
+      }
+    } catch (error) {
+      console.log(error);
+
+      //fake data
+      data = {
+        accessToken:
+          'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjMzMDY5MzM2LCJleHAiOjE2MzM2NzQxMzZ9.UUjCJqQhaBPimCBf1lozMKxu8x6hK5KUPvW4qhR74E8fDfE6EzrvZxi_R2xO3U0g5B1vdvUTdc3AkSj2iCKBwQ',
+        tokenType: 'Bearer',
+        userName: 'admin',
+        id: '1',
+      };
     }
-
-    const data = await response.json();
-
-    //get data response
-    if (!data || data.status || data.statusCode) {
-      return alert('Login fail! Incorrect username or password!');
-    }
-
-    // const data = {
-    //   accessToken:
-    //     'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjMzMDY5MzM2LCJleHAiOjE2MzM2NzQxMzZ9.UUjCJqQhaBPimCBf1lozMKxu8x6hK5KUPvW4qhR74E8fDfE6EzrvZxi_R2xO3U0g5B1vdvUTdc3AkSj2iCKBwQ',
-    //   tokenType: 'Bearer',
-    //   userName: 'admin',
-    //   id: '1',
-    // };
 
     //save auth info
     localStorage.setItem('isLoggedIn', '1');
@@ -88,27 +96,34 @@ export const AuthContextProvider = (props) => {
       return alert('Please fill all required fields!');
     }
 
-    const response = await fetch('http://localhost:8080/api/sign-up', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
+    let data;
 
-    if (!response) {
-      return alert('Send request to server failed!');
+    try {
+      const response = await fetch('http://localhost:8080/api/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      data = await response.json();
+
+      console.log(data);
+      if (data.status === false) {
+        return alert('Signup fail! Try another username!');
+      }
+    } catch (error) {
+      console.log(error);
+
+      //fake data
+      data = { status: true };
     }
-
-    const data = await response.json();
-
-    console.log(data);
-    if (data.status === false) {
-      return alert('Signup fail! Try another username!');
-    }
-
-    // const data = { status: true };
 
     //enter sign in page
     window.location.href = '/sign-in';

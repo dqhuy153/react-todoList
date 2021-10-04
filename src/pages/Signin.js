@@ -4,50 +4,7 @@ import React, { Component } from 'react';
 import AuthContext from '../store/Auth/auth-context';
 
 import { Redirect, Link } from 'react-router-dom';
-// const LOGIN = {
-//   user: [
-//     {
-//       id: 1,
-//       name: 'xuanchienk58@gmail.com',
-//       password: '030620',
-//     },
-//     {
-//       id: 2,
-//       name: 'dovudung@gmail.com',
-//       password: '050320',
-//     },
-//     {
-//       id: 3,
-//       name: 'dangquanghuy@gmail.com',
-//       password: '150399',
-//     },
-//     {
-//       id: 4,
-//       name: 'truongaxin@gmail.com',
-//       password: '123123',
-//     },
-//     {
-//       id: 5,
-//       name: 'hoanganhsy@gmail.com',
-//       password: '100420',
-//     },
-//     {
-//       id: 6,
-//       name: 'nguyennhattan@gmail.com',
-//       password: '100920',
-//     },
-//     {
-//       id: 7,
-//       name: 'tranvansy@gmail.com',
-//       password: '121120',
-//     },
-//     {
-//       id: 8,
-//       name: 'admin',
-//       password: 'admin',
-//     },
-//   ],
-// };
+
 export default class Signin extends Component {
   static contextType = AuthContext;
 
@@ -127,3 +84,48 @@ export default class Signin extends Component {
     );
   }
 }
+
+// const LOGIN = {
+//   user: [
+//     {
+//       id: 1,
+//       name: 'xuanchienk58@gmail.com',
+//       password: '030620',
+//     },
+//     {
+//       id: 2,
+//       name: 'dovudung@gmail.com',
+//       password: '050320',
+//     },
+//     {
+//       id: 3,
+//       name: 'dangquanghuy@gmail.com',
+//       password: '150399',
+//     },
+//     {
+//       id: 4,
+//       name: 'truongaxin@gmail.com',
+//       password: '123123',
+//     },
+//     {
+//       id: 5,
+//       name: 'hoanganhsy@gmail.com',
+//       password: '100420',
+//     },
+//     {
+//       id: 6,
+//       name: 'nguyennhattan@gmail.com',
+//       password: '100920',
+//     },
+//     {
+//       id: 7,
+//       name: 'tranvansy@gmail.com',
+//       password: '121120',
+//     },
+//     {
+//       id: 8,
+//       name: 'admin',
+//       password: 'admin',
+//     },
+//   ],
+// };

@@ -11,10 +11,15 @@
     height: 70%;
     z-index: 100;
     border-right: 1px solid #eee;
+    overflow: auto;
 
     a {
       text-decoration: none;
       color: #333;
+      width: 100%;
+      height: 100%;
+      padding: 2rem 2.4rem;
+      display: block;
 
       &:active {
         color: #000;
@@ -23,14 +28,18 @@
 
     ul {
       li {
-        padding: 2rem 2.4rem;
         align-items: center;
         cursor: pointer;
         border-bottom: 2px solid #fff;
 
-        // &:hover {
-        //   background: #f0f6ff;
-        // }
+        &:hover {
+          // background: #f0f6ff;
+          border-right: 5px solid #fd9379;
+        }
+
+        &.active {
+          border-right: 5px solid #fd9379;
+        }
 
         h3 {
           font-size: 1.2rem;
@@ -40,6 +49,7 @@
         p {
           font-weight: bold;
           margin-top: 0.7rem;
+          width: 100%;
 
           &:hover {
             color: blue;
@@ -66,6 +76,89 @@
       font-size: 2rem;
       font-weight: 200;
       margin-bottom: 3rem;
+    }
+
+    .project {
+      h2 {
+        font-weight: bold;
+        font-size: 1.3rem;
+        margin-bottom: 3rem;
+
+        span {
+          font-weight: 300;
+          margin-left: 0.5rem;
+        }
+      }
+
+      .project-mentor {
+        font-size: 1.1rem;
+        span {
+          margin-left: 1rem;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .documentation {
+      h1 {
+        margin-bottom: 4rem;
+      }
+      ul {
+        li {
+          margin-bottom: 2rem;
+          font-weight: 500;
+
+          a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.1rem;
+
+            &:hover {
+              color: blue;
+            }
+          }
+
+          ul {
+            margin-top: 1.5rem;
+            margin-left: 1rem;
+            list-style: inside;
+
+            li {
+              margin-bottom: 1.2rem;
+            }
+            a {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+    }
+
+    .members {
+      min-height: 83vh !important;
+
+      ul {
+        li {
+          // width: 50%;
+          margin-bottom: 1rem;
+
+          .member-item_left {
+            display: flex;
+            align-items: center;
+            // justify-content: space-between;
+
+            .member-item_name {
+              margin-left: 1rem;
+              width: 15rem;
+            }
+            .member-item_role {
+              font-size: 0.9rem;
+              font-style: italic;
+              font-weight: 300;
+            }
+          }
+        }
+      }
     }
   }
 }

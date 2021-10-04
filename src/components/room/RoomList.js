@@ -23,7 +23,7 @@ export default function RoomList({
           <li key={room.id} className={styles['container__recent--child']}>
             <RoomItem
               id={room.id}
-              nameRoom={room.nameRoom}
+              name={room.name}
               showOption={showOption}
               password={room.password}
             />

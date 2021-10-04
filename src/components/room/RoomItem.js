@@ -11,17 +11,11 @@ import Button1 from '../UI/Button/Button1';
 import DataContext from '../../store/data/data-context';
 import Modal1 from '../UI/Modal/Modal1';
 
-export default function RoomItem({
-  id,
-  showOption,
-  nameRoom,
-  password,
-  ...props
-}) {
+export default function RoomItem({ id, showOption, name, password, ...props }) {
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
-  const [updatedRoomTitle, setUpdatedRoomTitle] = useState(nameRoom);
+  const [updatedRoomTitle, setUpdatedRoomTitle] = useState(name);
   const [updatedRoomPassword, setUpdatedRoomPassword] = useState(password);
 
   const dataCtx = useContext(DataContext);
@@ -82,7 +76,7 @@ export default function RoomItem({
         className={styles['container__recent--child']}
       >
         <Card className={`${styles.room} ${styles['own__room--organ']}`}>
-          <p>{nameRoom}</p>
+          <p>{name}</p>
         </Card>
       </NavLink>
       {showOptionModal && (
@@ -127,7 +121,7 @@ export default function RoomItem({
       )}
       {showConfirmDeleteModal && (
         <Modal1
-          title={`Delete room "${nameRoom}" ?`}
+          title={`Delete room "${name}" ?`}
           btn1="No"
           btn1Width="25%"
           btn1Color="#DADADA"

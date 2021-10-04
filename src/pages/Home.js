@@ -109,8 +109,8 @@ function Home(props) {
       return alert('Room password is required!');
     }
 
-    if (!passwordCreateRoom || passwordCreateRoom.trim().length < 5) {
-      return alert("Minimum length's password is 5!");
+    if (!passwordCreateRoom || passwordCreateRoom.trim().length < 4) {
+      return alert("Minimum length's password is 4!");
     }
 
     dataCtx.onCreateRoom(titleCreateRoom, passwordCreateRoom, true);
