@@ -1,7 +1,9 @@
 import React, { Suspense, useContext, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
+import AppNavigation from './components/layout/AppNavigation';
 import Layout from './components/layout/Layout';
+import LayoutNotSideBar from './components/layout/LayoutNotSideBar';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
 import AuthContext from './store/Auth/auth-context';
 
@@ -54,19 +56,22 @@ function App() {
         <Route exact path="/forget">
           <Forgetpass />
         </Route>
+        <Route path="/about">
+          <AppNavigation logoTitle="TodoList." />
+          <About />
+        </Route>
 
         {isLoggedIn && token && userId && username ? (
-          <Layout>
-            <Route path="/" exact>
-              <Home />
-            </Route>
-            <Route path="/room/:roomId">
-              <Room />
-            </Route>
-            <Route path="/about">
-              <About />
-            </Route>
-          </Layout>
+          <>
+            <Layout>
+              <Route path="/" exact>
+                <Home />
+              </Route>
+              <Route path="/room/:roomId">
+                <Room />
+              </Route>
+            </Layout>
+          </>
         ) : (
           <Redirect to="/sign-in" />
         )}

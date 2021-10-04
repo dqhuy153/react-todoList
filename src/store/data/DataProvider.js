@@ -85,28 +85,28 @@ export const DataContextProvider = (props) => {
   const history = useHistory();
 
   const fetchRoomsData = async () => {
-    // const response = await fetch('http://localhost:8080/api/rooms', {
-    //   headers: {
-    //     Authorization: 'Bearer ' + authCtx.userInfo?.token,
-    //   },
-    // });
+    const response = await fetch('http://localhost:8080/api/rooms', {
+      headers: {
+        Authorization: 'Bearer ' + authCtx.userInfo?.token,
+      },
+    });
 
-    // if (!response) {
-    //   return alert('Send request to server failed!');
-    // }
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (data.statusCode) {
-    //   return alert(`Error: ${data.message}`);
-    // }
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
 
     // const ownRoom = data.ownRoom; //??
 
     //set rooms data
     setOwnRoom(ROOM.ownRoom);
-    setCreatedRooms(ROOM.createdRooms);
-    setJoinedRooms(ROOM.joinedRooms);
+    setCreatedRooms(data['created-rooms'] || ROOM.createdRooms);
+    setJoinedRooms(data['joined-rooms'] || ROOM.joinedRooms);
   };
 
   //fetch rooms data
@@ -135,34 +135,34 @@ export const DataContextProvider = (props) => {
       }
     }
 
-    // const response = await fetch('http://localhost:8080/api/room', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + authCtx.userInfo?.token,
-    //   },
-    //   body: {
-    //     name: title.trim(),
-    //     password,
-    //   },
-    // });
+    const response = await fetch('http://localhost:8080/api/room', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx.userInfo?.token,
+      },
+      body: {
+        name: title.trim(),
+        password,
+      },
+    });
 
-    // if (!response) {
-    //   return alert('Send request to server failed!');
-    // }
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (data.statusCode) {
-    //   return alert(`Error: ${data.message}`);
-    // }
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
 
-    const data = {
-      id: 10,
-      name: title,
-      password: password,
-      userId: 1,
-    };
+    // const data = {
+    //   id: 10,
+    //   name: title,
+    //   password: password,
+    //   userId: 1,
+    // };
 
     //push new room to Room state
     setCreatedRooms((prev) => {
@@ -180,7 +180,7 @@ export const DataContextProvider = (props) => {
     history.push(`/room/${data.id}`);
   };
 
-  const handleJoinRoom = (roomId, password, checked = false) => {
+  const handleJoinRoom = async (roomId, password, checked = false) => {
     if (!checked) {
       if (!roomId || roomId.trim().length === 0) {
         return alert('Room Id is required!');
@@ -191,33 +191,35 @@ export const DataContextProvider = (props) => {
       }
     }
 
-    // const response = await fetch('http://localhost:8080/api/room', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + authCtx.userInfo?.token,
-    //   },
-    //   body: {
-    //     name: title.trim(),
-    //     password,
-    //   },
-    // });
+    const response = await fetch('http://localhost:8080/api/user-room', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx.userInfo?.token,
+      },
+      body: {
+        'room-id': roomId.trim(),
+        password,
+      },
+    });
 
-    // if (!response) {
-    //   return alert('Send request to server failed!');
-    // }
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (data.statusCode) {
-    //   return alert(`Error: ${data.message}`);
-    // }
+    if (!data.status) {
+      return alert(`Error: ${data.message}`);
+    }
 
-    history.push(`/room/${roomId}`);
+    if (data.status) {
+      history.push(`/room/${roomId}`);
+    }
   };
 
   //@param: updatedData: {title, password}
-  const handleEditRoom = (roomId, updatedData, checked) => {
+  const handleEditRoom = async (roomId, updatedData, checked) => {
     if (!checked) {
       if (!updatedData.title || updatedData.title.trim().length === 0) {
         return alert('Room title is required!');
@@ -232,35 +234,35 @@ export const DataContextProvider = (props) => {
       }
     }
 
-    // const response = await fetch('http://localhost:8080/api/room', {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + authCtx.userInfo?.token,
-    //   },
-    //   body: {
-    //     id: roomId,
-    //     name: updatedData.title.trim(),
-    //     password: updatedData.password,
-    //   },
-    // });
+    const response = await fetch('http://localhost:8080/api/room', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx.userInfo?.token,
+      },
+      body: {
+        id: roomId,
+        name: updatedData.title.trim(),
+        password: updatedData.password,
+      },
+    });
 
-    // if (!response) {
-    //   return alert('Send request to server failed!');
-    // }
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (data.statusCode) {
-    //   return alert(`Error: ${data.message}`);
-    // }
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
 
-    const data = {
-      id: 10,
-      name: updatedData.title,
-      password: updatedData.password,
-      userId: 1,
-    };
+    // const data = {
+    //   id: 10,
+    //   name: updatedData.title,
+    //   password: updatedData.password,
+    //   userId: 1,
+    // };
 
     //update room in Room state
     setCreatedRooms((prev) => {
@@ -278,27 +280,27 @@ export const DataContextProvider = (props) => {
     alert('Updated room information successfully!');
   };
 
-  const handleDeleteRoom = (roomId) => {
-    // const response = await fetch('http://localhost:8080/api/room', {
-    //   method: 'DELETE',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + authCtx.userInfo?.token,
-    //   },
-    //   body: {
-    //     room-id: roomId,
-    //   },
-    // });
+  const handleDeleteRoom = async (roomId) => {
+    const response = await fetch('http://localhost:8080/api/room', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx.userInfo?.token,
+      },
+      body: {
+        'room-id': roomId,
+      },
+    });
 
-    // if (!response) {
-    //   return alert('Send request to server failed!');
-    // }
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (data.statusCode) {
-    //   return alert(`Error: ${data.message}`);
-    // }
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
 
     setCreatedRooms((prev) => prev.filter((room) => room.id !== roomId));
   };

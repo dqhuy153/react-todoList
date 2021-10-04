@@ -9,6 +9,11 @@
   font-family: 'Roboto', serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 10rem;
+}
+
 .centered {
   margin: 3rem auto;
   text-align: center;
