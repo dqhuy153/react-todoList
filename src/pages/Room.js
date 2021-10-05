@@ -1,41 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import styles from './Room.module.scss';
 import MemberList from '../components/member/MemberList';
 import BoardList from '../components/board/BoardList';
 import RoomSetting from '../components/room/RoomSetting';
+import AuthContext from '../store/Auth/auth-context';
+import Button1 from '../components/UI/Button/Button1';
+import Modal1 from '../components/UI/Modal/Modal1';
+
+import styles from './Room.module.scss';
+import DataContext from '../store/data/data-context';
 
 const roomInfo = {
-  name: 'Room title',
-  id: '10',
-  password: '123456',
-  userId: 3,
-  isCreator: true,
+  roomInfo: {
+    name: 'Room title',
+    id: 11,
+    password: '123456',
+    userId: 1,
+  },
   members: [
     {
       id: 1,
-      name: 'Andy',
+      username: 'Andy',
     },
     {
       id: 2,
-      name: 'Chien',
+      username: 'Chien',
     },
     {
       id: 3,
-      name: 'Huy',
+      username: 'Huy',
     },
     {
       id: 4,
-      name: 'Xin',
+      username: 'Xin',
     },
     {
       id: 5,
-      name: 'Nguyen Van A',
+      username: 'Nguyen Van A',
     },
     {
       id: 6,
-      name: 'Nguyen Van Le ABC',
+      username: 'Nguyen Van Le ABC',
     },
   ],
   boards: [
@@ -138,8 +144,16 @@ const roomInfo = {
 };
 
 export default function Room(props) {
+  // const [roomInfo, setRoomInfo] = useState();
   const [boards, setBoards] = useState(roomInfo.boards);
   const [members, setMembers] = useState(roomInfo.members);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const dataCtx = useContext(DataContext);
+
+  const isCreator =
+    roomInfo.roomInfo.userId === parseInt(authCtx.userInfo.userId);
 
   const { roomId } = useParams();
 
@@ -154,9 +168,22 @@ export default function Room(props) {
     );
   }, []);
 
+  //leave modal handlers
+  const handleShowLeaveModal = () => {
+    setShowLeaveModal(true);
+  };
+
+  const handleHideLeaveModal = () => {
+    setShowLeaveModal(false);
+  };
+
   //member handlers
   const handleRemoveMember = (id) => {
     setMembers((prev) => prev.filter((member) => member.id !== id));
+  };
+
+  const handleLeaveRoom = () => {
+    dataCtx.onLeaveRoom(roomInfo.roomInfo.id);
   };
 
   //board handlers
@@ -195,19 +222,47 @@ export default function Room(props) {
       {/* room information */}
       <div className={styles['room-header']}>
         <h2 className={styles.title}>
-          {roomInfo.name} - ID: {roomId}
+          {roomInfo.roomInfo.name} - ID: {roomId}
         </h2>
         <div className={styles.icons}>
           <MemberList items={members}></MemberList>
           {/* creator can see room setting */}
-          {roomInfo.isCreator && (
+          {/* joiner will see leave room btn */}
+          {isCreator ? (
             <RoomSetting
               className={styles.settingIcon}
               id={roomId}
-              password={roomInfo.password}
+              password={roomInfo.roomInfo.password}
               members={members}
               onRemoveMember={handleRemoveMember}
             />
+          ) : (
+            <>
+              <Button1
+                buttonColor="#FC6868"
+                textColor="#fff"
+                onClick={handleShowLeaveModal}
+                className={styles['leave-btn']}
+              >
+                Leave
+              </Button1>
+              {showLeaveModal && (
+                <Modal1
+                  title="Do you want to leave room?"
+                  onBackdropClick={handleHideLeaveModal}
+                  onCloseClick={handleHideLeaveModal}
+                  btn1="Cancel"
+                  btn1Width="25%"
+                  btn1Color="#DADADA"
+                  onBtn1Click={handleHideLeaveModal}
+                  btn2="OK"
+                  btn2Color="var(--primary-color)"
+                  btn2Width="25%"
+                  btnFontWeight="500"
+                  onBtn2Click={handleLeaveRoom}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

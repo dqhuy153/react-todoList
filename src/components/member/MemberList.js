@@ -20,9 +20,9 @@ export default function MemberList({ items, ...props }) {
         <li key={member.id}>
           <MemberItem
             id={member.id}
-            name={member.name}
+            name={member.username}
             isCreator={member.isCreator}
-            firstLetter={getFirstLetterOfName(member.name)}
+            firstLetter={getFirstLetterOfName(member.username)}
           />
         </li>
       ))}

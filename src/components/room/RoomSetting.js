@@ -79,9 +79,11 @@ export default function RoomSetting({
             {members.map((member) => (
               <li key={member.id} className={styles['tag-member-item']}>
                 <div className={styles['tag-member-item_left']}>
-                  <MemberIcon firstLetter={getFirstLetterOfName(member.name)} />
+                  <MemberIcon
+                    firstLetter={getFirstLetterOfName(member.username)}
+                  />
                   <p className={styles['tag-member-item_name']}>
-                    {member.name}
+                    {member.username}
                   </p>
                 </div>
                 {!member.isCreator && (

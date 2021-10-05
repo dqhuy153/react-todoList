@@ -33,7 +33,10 @@ import DataContext from '../store/data/data-context';
 function Home(props) {
   const dataCtx = useContext(DataContext);
 
-  const ROOM = dataCtx.roomsData !== null ? dataCtx.roomsData : {createdRooms:[], joinedRooms:[]};
+  const ROOM =
+    dataCtx.roomsData !== null
+      ? dataCtx.roomsData
+      : { createdRooms: [], joinedRooms: [] };
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);

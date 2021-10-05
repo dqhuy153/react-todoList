@@ -68,7 +68,7 @@ const ROOM = {
       userId: 3,
     },
     {
-      id: 101,
+      id: 11,
       name: 'Room Andy',
       password: 12345,
       userId: 4,
@@ -195,69 +195,6 @@ export const DataContextProvider = (props) => {
     history.push(`/room/${data.id}`);
   };
 
-  const handleJoinRoom = async (roomId, password, checked = false) => {
-    if (!checked) {
-      if (!roomId || roomId.trim().length === 0) {
-        return alert('Room Id is required!');
-      }
-
-      if (!Number.isInteger(roomId)) {
-        return alert('Room Id is invalid!');
-      }
-
-      if (!password || password.trim().length === 0) {
-        return alert('Room password is required!');
-      }
-    }
-
-    let data;
-
-    try {
-      const response = await fetch('http://localhost:8080/api/user-room', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx.userInfo?.token,
-        },
-        body: JSON.stringify({
-          'room-id': roomId.trim(),
-          password,
-        }),
-      });
-
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
-
-      data = await response.json();
-    } catch (error) {
-      console.log(error);
-
-      //fake data
-      data = { name: 'Joined room', status: true };
-    }
-
-    if (!data.status) {
-      return alert(`Error: ${data.message}`);
-    }
-
-    setJoinedRooms((prev) => {
-      const updatedRooms = prev;
-      updatedRooms.push({
-        id: data.id,
-        name: data.name,
-        password: password,
-        userId: data.userId,
-      });
-
-      return updatedRooms;
-    });
-
-    if (data.status) {
-      history.push(`/room/${roomId}`);
-    }
-  };
-
   //@param: updatedData: {title, password}
   const handleEditRoom = async (roomId, updatedData, checked) => {
     if (!checked) {
@@ -360,6 +297,107 @@ export const DataContextProvider = (props) => {
     setCreatedRooms((prev) => prev.filter((room) => room.id !== roomId));
   };
 
+  const handleJoinRoom = async (roomId, password, checked = false) => {
+    if (!checked) {
+      if (!roomId || roomId.trim().length === 0) {
+        return alert('Room Id is required!');
+      }
+
+      if (!Number.isInteger(roomId)) {
+        return alert('Room Id is invalid!');
+      }
+
+      if (!password || password.trim().length === 0) {
+        return alert('Room password is required!');
+      }
+    }
+
+    let data;
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user-room', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx.userInfo?.token,
+        },
+        body: JSON.stringify({
+          'room-id': roomId.trim(),
+          password,
+        }),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      data = await response.json();
+    } catch (error) {
+      console.log(error);
+
+      //fake data
+      data = { 'room-id': 10, name: 'Joined room', status: true };
+    }
+
+    if (!data.status) {
+      return alert(`Error: ${data.message}`);
+    }
+
+    setJoinedRooms((prev) => {
+      const updatedRooms = prev;
+      updatedRooms.push({
+        id: data['room-id'],
+        name: data.name,
+        password: password,
+        userId: data.userId,
+      });
+
+      return updatedRooms;
+    });
+
+    if (data.status) {
+      history.push(`/room/${roomId}`);
+    }
+  };
+
+  const handleLeaveRoom = async (roomId) => {
+    let data;
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user-room', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx.userInfo?.token,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      data = await response.json();
+    } catch (error) {
+      console.log(error);
+
+      //fake data
+      data = { 'room-id': 10, name: 'Joined room', status: true };
+    }
+
+    if (!data.status) {
+      return alert(`Error: ${data.message}`);
+    }
+
+    setJoinedRooms((prev) => prev.filter((room) => room.id !== roomId));
+
+    if (data.status) {
+      history.replace('/');
+    }
+  };
+
+  const handleGetRoomInfo = (roomId) => {};
+
   return (
     <DataContext.Provider
       value={{
@@ -373,6 +411,8 @@ export const DataContextProvider = (props) => {
         onEditRoom: handleEditRoom,
         onDeleteRoom: handleDeleteRoom,
         getRoomsData: handleGetRooms,
+        onGetRoomInfo: handleGetRoomInfo,
+        onLeaveRoom: handleLeaveRoom,
       }}
     >
       {props.children}

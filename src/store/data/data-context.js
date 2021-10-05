@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RoomContext = React.createContext({
+const DataContext = React.createContext({
   //ROOM data
   roomsData: {
     ownRoom: {
@@ -27,10 +27,12 @@ const RoomContext = React.createContext({
   onEditRoom: (roomId, updatedData, checked) => {},
   onDeleteRoom: (roomId) => {},
   getRoomsData: () => {},
+  onGetRoomInfo: () => {},
+  onLeaveRoom: (roomId) => {},
 
   //BOARD data
 
   //TASK data
 });
 
-export default RoomContext;
+export default DataContext;
