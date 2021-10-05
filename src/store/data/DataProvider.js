@@ -396,7 +396,41 @@ export const DataContextProvider = (props) => {
     }
   };
 
-  const handleGetRoomInfo = (roomId) => {};
+  const handleGetRoomInfo = async (roomId) => {
+    let data;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/room/${roomId}/total-board`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx.userInfo?.token,
+          },
+        }
+      );
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      data = await response.json();
+    } catch (error) {
+      console.log(error);
+
+      //fake data
+      // data = { 'room-id': 10, name: 'Joined room', status: true };
+    }
+
+    if (!data.status) {
+      return alert(`Error: ${data.message}`);
+    }
+
+    setJoinedRooms((prev) => prev.filter((room) => room.id !== roomId));
+
+    return data;
+  };
 
   return (
     <DataContext.Provider

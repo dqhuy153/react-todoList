@@ -11,7 +11,7 @@ import Modal1 from '../components/UI/Modal/Modal1';
 import styles from './Room.module.scss';
 import DataContext from '../store/data/data-context';
 
-const roomInfo = {
+const roomInfoInit = {
   roomInfo: {
     name: 'Room title',
     id: 11,
@@ -144,7 +144,7 @@ const roomInfo = {
 };
 
 export default function Room(props) {
-  // const [roomInfo, setRoomInfo] = useState();
+  const [roomInfo, setRoomInfo] = useState();
   const [boards, setBoards] = useState(roomInfo.boards);
   const [members, setMembers] = useState(roomInfo.members);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -158,15 +158,20 @@ export default function Room(props) {
   const { roomId } = useParams();
 
   useEffect(() => {
-    setMembers(
-      roomInfo.members.map((member) => {
-        return {
-          ...member,
-          isCreator: member.id === roomInfo.userId ? true : false,
-        };
-      })
-    );
-  }, []);
+    if (dataCtx) {
+      const roomData = dataCtx.onGetRoomInfo();
+
+      setRoomInfo(dataCtx.onGetRoomInfo());
+      setMembers(
+        roomData.members.map((member) => {
+          return {
+            ...member,
+            isCreator: member.id === roomData.userId ? true : false,
+          };
+        })
+      );
+    }
+  }, [dataCtx]);
 
   //leave modal handlers
   const handleShowLeaveModal = () => {
