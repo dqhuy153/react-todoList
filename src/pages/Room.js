@@ -42,6 +42,7 @@ export default function Room(props) {
               };
             })
           );
+          setBoards(data?.boards);
         }
       });
 
@@ -49,7 +50,7 @@ export default function Room(props) {
       // setMembers(roomInfoDemo.members);
     }
     //fake data
-  }, []);
+  }, [roomId]);
 
   //leave modal handlers
   const handleShowLeaveModal = () => {

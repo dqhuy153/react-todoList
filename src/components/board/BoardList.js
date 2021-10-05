@@ -6,7 +6,7 @@ import BoardItem from './BoardItem';
 import styles from './BoardList.module.scss';
 
 export default function BoardList({
-  items,
+  items = [],
   onCreateNewBoard,
   onDeleteBoardClick,
   onSaveBoardClick,
