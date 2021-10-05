@@ -11,138 +11,6 @@ import Modal1 from '../components/UI/Modal/Modal1';
 import styles from './Room.module.scss';
 import DataContext from '../store/data/data-context';
 
-const roomInfoInit = {
-  roomInfo: {
-    name: 'Room title',
-    id: 11,
-    password: '123456',
-    userId: 1,
-  },
-  members: [
-    {
-      id: 1,
-      username: 'Andy',
-    },
-    {
-      id: 2,
-      username: 'Chien',
-    },
-    {
-      id: 3,
-      username: 'Huy',
-    },
-    {
-      id: 4,
-      username: 'Xin',
-    },
-    {
-      id: 5,
-      username: 'Nguyen Van A',
-    },
-    {
-      id: 6,
-      username: 'Nguyen Van Le ABC',
-    },
-  ],
-  boards: [
-    {
-      id: 1,
-      title: 'Board 1',
-      tasks: [
-        {
-          id: 1,
-          title: 'Task 1',
-          detail: 'Description task 1',
-          date: '2021-09-24',
-          status: false,
-        },
-        {
-          id: 2,
-          title: 'Task 2',
-          detail: 'Description task 2',
-          date: '2021-09-25',
-          status: true,
-        },
-        {
-          id: 3,
-          title: 'Task 3',
-          detail: 'Description task 3',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 4,
-          title: 'Task 4',
-          detail: 'Description task 4',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 5,
-          title: 'Task 5',
-          detail: 'Description task 5',
-          date: '2021-09-26',
-          status: false,
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Board 2 with very long name',
-      tasks: [
-        {
-          id: 6,
-          title: 'Task 6',
-          detail: 'Description task 6',
-          date: '2021-09-24',
-          status: false,
-        },
-        {
-          id: 7,
-          title: 'Task 7',
-          detail: 'Description task 7',
-          date: '2021-09-25',
-          status: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Board 3',
-      tasks: [
-        {
-          id: 8,
-          title: 'Task 8',
-          detail: 'Description task 8',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 9,
-          title: 'Task 9',
-          detail: 'Description task 9',
-          date: '2021-09-25',
-          status: true,
-        },
-        {
-          id: 10,
-          title: 'Task 10',
-          detail: 'Description task 10',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 11,
-          title: 'Task 11',
-          detail: 'Description task 11',
-          date: '2021-09-26',
-          status: false,
-        },
-      ],
-    },
-  ],
-};
-
 export default function Room(props) {
   const [roomInfo, setRoomInfo] = useState();
   const [boards, setBoards] = useState([]);
@@ -154,7 +22,6 @@ export default function Room(props) {
 
   let isCreator;
   if (authCtx && dataCtx) {
-
     isCreator =
       roomInfo?.roomInfo?.userId === parseInt(authCtx?.userInfo?.userId);
   }
@@ -163,18 +30,25 @@ export default function Room(props) {
 
   useEffect(() => {
     if (dataCtx) {
-      const roomData = dataCtx.onGetRoomInfo(roomId, (data) => {
-        setRoomInfo(data);
-        setMembers(
-          data?.members?.map((member) => {
-            return {
-              ...member,
-              isCreator: member.id === data.userId ? true : false,
-            };
-          })
-        );
+      dataCtx.onGetRoomInfo(roomId, (data) => {
+        if (data) {
+          console.log(data);
+          setRoomInfo(data);
+          setMembers(
+            data?.members?.map((member) => {
+              return {
+                ...member,
+                isCreator: member.id === data.userId ? true : false,
+              };
+            })
+          );
+        }
       });
+
+      // setRoomInfo(roomInfoDemo);
+      // setMembers(roomInfoDemo.members);
     }
+    //fake data
   }, []);
 
   //leave modal handlers
@@ -196,34 +70,111 @@ export default function Room(props) {
   };
 
   //board handlers
-  const handleCreateNewBoard = (boardTitle) => {
-    setBoards((prev) => {
-      const updatedBoard = prev;
-
-      updatedBoard.push({
-        id: Math.random(),
-        title: boardTitle,
-        tasks: [],
+  const handleCreateNewBoard = async (boardTitle) => {
+    //send api
+    if (authCtx) {
+      const response = await fetch('http://localhost:8080/api/board', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx?.userInfo.token,
+        },
+        body: JSON.stringify({
+          name: boardTitle,
+          'room-id': roomInfo?.roomInfo.id,
+        }),
       });
 
-      return updatedBoard;
-    });
-  };
-
-  const handleSaveBoard = (boardData) => {
-    let updatedBoard = boards.map((board) => {
-      if (board.id === boardData.id) {
-        board.title = boardData.title;
+      if (!response) {
+        return alert('Send request to server failed!');
       }
 
-      return board;
-    });
+      const data = await response.json();
 
-    setBoards(updatedBoard);
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+
+      //update boards state
+      setBoards((prev) => {
+        const updatedBoard = prev;
+
+        updatedBoard.push({
+          id: data.id ? data.id : Math.random(),
+          title: boardTitle,
+          tasks: [],
+        });
+
+        return updatedBoard;
+      });
+    }
   };
 
-  const handleDeleteBoard = (boardId) => {
-    setBoards((prev) => prev.filter((board) => board.id !== boardId));
+  const handleSaveBoard = async (boardData) => {
+    if (authCtx) {
+      //send api
+      const response = await fetch('http://localhost:8080/api/board', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx?.userInfo.token,
+        },
+        body: JSON.stringify({
+          id: boardData.id,
+          name: boardData.title,
+        }),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      const data = await response.json();
+
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+
+      //update boards state
+      let updatedBoard = boards.map((board) => {
+        if (board.id === boardData.id) {
+          board.title = boardData.title;
+        }
+
+        return board;
+      });
+
+      setBoards(updatedBoard);
+    }
+  };
+
+  const handleDeleteBoard = async (boardId) => {
+    if (authCtx) {
+      //send api
+      const response = await fetch('http://localhost:8080/api/board', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx?.userInfo.token,
+        },
+        body: JSON.stringify({
+          id: boardId,
+        }),
+      });
+
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      const data = await response.json();
+
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+
+      //update boards state
+      setBoards((prev) => prev.filter((board) => board.id !== boardId));
+    }
   };
 
   return (
