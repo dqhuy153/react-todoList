@@ -151,10 +151,10 @@ export const DataContextProvider = (props) => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
-        body: {
+        body: JSON.stringify({
           name: title.trim(),
           password,
-        },
+        }),
       });
 
       if (!response) {
