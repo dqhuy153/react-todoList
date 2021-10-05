@@ -154,11 +154,7 @@ export const DataContextProvider = (props) => {
         },
         body: JSON.stringify({
           name: title.trim(),
-<<<<<<< HEAD
-          password,
-=======
           password: password,
->>>>>>> 2b0f2ae18fd6b207d11dcd577e6935391df5092f
         }),
       });
 
@@ -223,10 +219,10 @@ export const DataContextProvider = (props) => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
-        body: {
+        body: JSON.stringify({
           'room-id': roomId.trim(),
           password,
-        },
+        }),
       });
 
       if (!response) {
@@ -286,11 +282,11 @@ export const DataContextProvider = (props) => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
-        body: {
+        body: JSON.stringify({
           id: roomId,
           name: updatedData.title.trim(),
           password: updatedData.password,
-        },
+        }),
       });
 
       if (!response) {
@@ -338,9 +334,9 @@ export const DataContextProvider = (props) => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
-        body: {
+        body: JSON.stringify({
           'room-id': roomId,
-        },
+        }),
       });
 
       if (!response) {
