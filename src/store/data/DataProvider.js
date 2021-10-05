@@ -396,7 +396,7 @@ export const DataContextProvider = (props) => {
     }
   };
 
-  const handleGetRoomInfo = async (roomId) => {
+  const handleGetRoomInfo = async (roomId, callback) => {
     let data;
 
     try {
@@ -416,6 +416,12 @@ export const DataContextProvider = (props) => {
       }
 
       data = await response.json();
+
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+  
+      callback(data);
     } catch (error) {
       console.log(error);
 
@@ -423,13 +429,7 @@ export const DataContextProvider = (props) => {
       // data = { 'room-id': 10, name: 'Joined room', status: true };
     }
 
-    if (!data.status) {
-      return alert(`Error: ${data.message}`);
-    }
-
-    setJoinedRooms((prev) => prev.filter((room) => room.id !== roomId));
-
-    return data;
+    
   };
 
   return (

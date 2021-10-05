@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import MemberList from '../components/member/MemberList';
@@ -145,33 +145,37 @@ const roomInfoInit = {
 
 export default function Room(props) {
   const [roomInfo, setRoomInfo] = useState();
-  const [boards, setBoards] = useState(roomInfo.boards);
-  const [members, setMembers] = useState(roomInfo.members);
+  const [boards, setBoards] = useState([]);
+  const [members, setMembers] = useState([]);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
 
-  const isCreator =
-    roomInfo.roomInfo.userId === parseInt(authCtx.userInfo.userId);
+  let isCreator;
+  if (authCtx && dataCtx) {
+
+    isCreator =
+      roomInfo?.roomInfo?.userId === parseInt(authCtx?.userInfo?.userId);
+  }
 
   const { roomId } = useParams();
 
   useEffect(() => {
     if (dataCtx) {
-      const roomData = dataCtx.onGetRoomInfo();
-
-      setRoomInfo(dataCtx.onGetRoomInfo());
-      setMembers(
-        roomData.members.map((member) => {
-          return {
-            ...member,
-            isCreator: member.id === roomData.userId ? true : false,
-          };
-        })
-      );
+      const roomData = dataCtx.onGetRoomInfo(roomId, (data) => {
+        setRoomInfo(data);
+        setMembers(
+          data?.members?.map((member) => {
+            return {
+              ...member,
+              isCreator: member.id === data.userId ? true : false,
+            };
+          })
+        );
+      });
     }
-  }, [dataCtx]);
+  }, []);
 
   //leave modal handlers
   const handleShowLeaveModal = () => {
@@ -227,7 +231,7 @@ export default function Room(props) {
       {/* room information */}
       <div className={styles['room-header']}>
         <h2 className={styles.title}>
-          {roomInfo.roomInfo.name} - ID: {roomId}
+          {roomInfo?.roomInfo?.name} - ID: {roomId}
         </h2>
         <div className={styles.icons}>
           <MemberList items={members}></MemberList>
