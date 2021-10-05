@@ -145,6 +145,7 @@ export const DataContextProvider = (props) => {
     let data;
 
     try {
+      console.log(authCtx.userInfo?.token);
       const response = await fetch('http://localhost:8080/api/room', {
         method: 'POST',
         headers: {
@@ -153,7 +154,11 @@ export const DataContextProvider = (props) => {
         },
         body: JSON.stringify({
           name: title.trim(),
+<<<<<<< HEAD
           password,
+=======
+          password: password,
+>>>>>>> 2b0f2ae18fd6b207d11dcd577e6935391df5092f
         }),
       });
 
