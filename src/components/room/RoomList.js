@@ -19,7 +19,7 @@ export default function RoomList({
       }}
     >
       <ul className={styles['container__recent--childs']}>
-        {items.map((room) => (
+        {items && items.map((room) => (
           <li key={room.id} className={styles['container__recent--child']}>
             <RoomItem
               id={room.id}

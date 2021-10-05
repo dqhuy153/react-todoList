@@ -33,7 +33,7 @@ import DataContext from '../store/data/data-context';
 function Home(props) {
   const dataCtx = useContext(DataContext);
 
-  const ROOM = dataCtx.roomsData;
+  const ROOM = dataCtx.roomsData !== null ? dataCtx.roomsData : {createdRooms:[], joinedRooms:[]};
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -201,7 +201,7 @@ function Home(props) {
         </div>
       )}
       {/* show browser all if has 5 room or more */}
-      {ROOM.createdRooms.length > 4 && (
+      {ROOM.createdRooms?.length > 4 && (
         <div>
           <button
             onClick={handleToggleFullCreatedRoom}
@@ -234,7 +234,7 @@ function Home(props) {
           {/* minimal room list */}
           {!showFullJoinedRoom && (
             <RoomList
-              items={ROOM.joinedRooms.slice(0, 4)}
+              items={ROOM.joinedRooms?.slice(0, 4)}
               backgroundColor="#ff8368"
               textColor="#fff"
               showOption={false}
@@ -251,7 +251,7 @@ function Home(props) {
           )}
         </div>
         {/* show browser all if has 5 room or more */}
-        {ROOM.joinedRooms.length > 4 && (
+        {ROOM.joinedRooms?.length > 4 && (
           <button
             onClick={handleToggleFullJoinedRoom}
             className={styles['container__recent--show__rooms']}
