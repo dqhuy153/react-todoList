@@ -6,6 +6,7 @@ import AuthContext from '../../store/Auth/auth-context';
 import { getFirstLetterOfName } from '../../util/helper';
 import CommentItem from '../comment/CommentItem';
 import MemberIcon from '../member/MemberIcon';
+import MemberItem from '../member/MemberItem';
 
 import Modal1 from '../UI/Modal/Modal1';
 
@@ -13,18 +14,19 @@ import styles from './TodoItem.module.scss';
 
 const comments = [
   {
-    commentId: 1,
-    userId: 3,
-    username: 'Huy',
-    content: 'Some comment here',
-    date: '18:30 24/9/21',
+    id: 1, //id
+    'user-id': 3, //user-id
+    //todo-id
+    username: 'Huy', //username
+    content: 'Some comment here', //content
+    // date: '18:30 24/9/21',//ko co
   },
   {
-    commentId: 2,
-    userId: 2,
+    id: 2,
+    'user-id': 2,
     username: 'Chien',
     content: 'This task has been done!',
-    date: '16:30 24/9/21',
+    // date: '16:30 24/9/21',
   },
 ];
 
@@ -32,6 +34,10 @@ export default function TodoItem({
   id,
   title,
   date,
+  modifyUserId,
+  modifyUsername,
+  createdUserId,
+  createdUsername,
   completed,
   description,
   onStatusChange,
@@ -45,28 +51,71 @@ export default function TodoItem({
   const [taskDesc, setTaskDesc] = useState(description);
   const [taskComplete, setTaskComplete] = useState(completed);
 
+  const [latestModifyUsername, setLatestModifyUsername] =
+    useState(modifyUsername);
+
   const [newComment, setNewComment] = useState('');
-  const [taskComments, setTaskComments] = useState(comments);
+  const [taskComments, setTaskComments] = useState([]);
 
   const authCtx = useContext(AuthContext);
 
-  //add isCurrentUser to taskComments
+  //fetch comments
   useEffect(() => {
-    if (authCtx.userInfo) {
-      setTaskComments(
-        comments.map((comment) => {
-          return {
-            ...comment,
-            isCurrentUser:
-              authCtx.userInfo.userId === comment.userId ? true : false,
-          };
-        })
-      );
-    }
-  }, [authCtx.userInfo]);
+    const fetchComments = async () => {
+      if (authCtx.userInfo) {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/api/todo/${id}/comments`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + authCtx?.userInfo.token,
+              },
+            }
+          );
+          if (!response) {
+            return alert('Send request to server failed!');
+          }
+
+          const data = await response.json();
+
+          if (data.statusCode) {
+            return alert(`Error: ${data.message}`);
+          }
+
+          //add isCurrentUser to taskComments
+          setTaskComments(
+            data.map((comment) => {
+              return {
+                ...comment,
+                isCurrentUser:
+                  parseInt(authCtx.userInfo.userId) === comment['user-id']
+                    ? true
+                    : false,
+              };
+            })
+          );
+        } catch (error) {
+          console.log(error);
+
+          //fake data
+          setTaskComments(
+            comments.map((comment) => {
+              return {
+                ...comment,
+                isCurrentUser:
+                  authCtx.userInfo.userId === comment['user-id'] ? true : false,
+              };
+            })
+          );
+        }
+      }
+    };
+    fetchComments();
+  }, [authCtx.userInfo, id]);
 
   //task handlers
-  const handleSaveTaskClick = () => {
+  const handleSaveTaskClick = async () => {
     if (!taskTitle || taskTitle.trim() === '') {
       return alert("Task's title is required!");
     }
@@ -75,12 +124,13 @@ export default function TodoItem({
       id,
       title: taskTitle,
       detail: taskDesc,
-      date,
+      // date,
       status: taskComplete,
     };
 
-    onSaveClick(updatedTaskData);
+    await onSaveClick(updatedTaskData);
 
+    setLatestModifyUsername(authCtx.userInfo.username);
     handleHideDetail();
   };
 
@@ -91,19 +141,41 @@ export default function TodoItem({
   };
 
   //comment handlers
-  const handleAddNewComment = (e) => {
+  const handleAddNewComment = async (e) => {
     e.preventDefault();
 
     if (!newComment || newComment.trim() === '') {
       return alert("Your comment can't be empty.");
     }
 
+    const response = await fetch('http://localhost:8080/api/comment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx?.userInfo.token,
+      },
+      body: JSON.stringify({
+        content: newComment,
+        'todo-id': id,
+      }),
+    });
+
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
+
+    const data = await response.json();
+
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
+
     const updatedComments = taskComments;
 
     updatedComments.unshift({
-      commentId: Math.random(),
-      userId: authCtx.userInfo.userId,
-      username: authCtx.userInfo.username,
+      id: data.id || Math.random(),
+      'user-id': data['user-id'] || authCtx.userInfo.userId,
+      username: data['username'] || authCtx.userInfo.username,
       content: newComment,
       date: new Date().toLocaleString(),
       isCurrentUser: true,
@@ -114,9 +186,30 @@ export default function TodoItem({
     setNewComment('');
   };
 
-  const handleDeleteComment = (commentId) => {
+  const handleDeleteComment = async (commentId) => {
+    const response = await fetch('http://localhost:8080/api/comment', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx?.userInfo.token,
+      },
+      body: JSON.stringify({
+        id: commentId,
+      }),
+    });
+
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
+
+    const data = await response.json();
+
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
+
     setTaskComments((prev) =>
-      prev.filter((comment) => comment.commentId !== commentId)
+      prev.filter((comment) => comment.id !== commentId)
     );
   };
 
@@ -167,8 +260,8 @@ export default function TodoItem({
           btnFontSize="0.9rem"
           btnFontWeight="600"
         >
-          {/* task content */}
           <div className={styles['modal-content']}>
+            {/* task content */}
             <div className={styles.content}>
               <textarea
                 placeholder="Description..."
@@ -184,7 +277,23 @@ export default function TodoItem({
                   />
                   <p>Complete</p>
                 </div>
-                <p className={styles.date}>{date.toLocaleString()}</p>
+                <p className={styles.date}>{date}</p>
+              </div>
+              <div className={styles['author-info']}>
+                <div className={styles['author-info_content']}>
+                  <span>Created</span>
+                  <MemberItem
+                    firstLetter={getFirstLetterOfName(createdUsername)}
+                    name={createdUsername}
+                  />
+                </div>
+                <div className={styles['author-info_content']}>
+                  <span>Modified</span>
+                  <MemberItem
+                    firstLetter={getFirstLetterOfName(latestModifyUsername)}
+                    name={latestModifyUsername}
+                  />
+                </div>
               </div>
             </div>
             {/* comments */}
@@ -210,17 +319,15 @@ export default function TodoItem({
             {/* comment list */}
             <ul className={styles.comments}>
               {taskComments.map((comment) => (
-                <li key={comment.commentId}>
+                <li key={comment.id}>
                   <CommentItem
-                    commentId={comment.commentId}
-                    userId={comment.userId}
+                    commentId={comment.id}
+                    userId={comment['user-id']}
                     username={comment.username}
                     content={comment.content}
                     date={comment.date}
                     isCurrentUser={comment.isCurrentUser}
-                    onDeleteComment={() =>
-                      handleDeleteComment(comment.commentId)
-                    }
+                    onDeleteComment={() => handleDeleteComment(comment.id)}
                   />
                 </li>
               ))}

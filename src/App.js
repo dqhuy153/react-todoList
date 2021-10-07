@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import AppNavigation from './components/layout/AppNavigation';
 import Layout from './components/layout/Layout';
-import LayoutNotSideBar from './components/layout/LayoutNotSideBar';
 import LoadingSpinner from './components/UI/Spinner/LoadingSpinner';
 import AuthContext from './store/Auth/auth-context';
 
@@ -36,6 +35,7 @@ function App() {
       });
       authCtx.setIsLoggedIn(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

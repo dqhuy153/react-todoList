@@ -112,7 +112,7 @@ const roomInfoDemo = {
   boards: [
     {
       id: 1,
-      title: 'Board 1',
+      name: 'Board 1',
       tasks: [
         {
           id: 1,
@@ -153,7 +153,7 @@ const roomInfoDemo = {
     },
     {
       id: 2,
-      title: 'Board 2 with very long name',
+      name: 'Board 2 with very long name',
       tasks: [
         {
           id: 6,
@@ -173,7 +173,7 @@ const roomInfoDemo = {
     },
     {
       id: 3,
-      title: 'Board 3',
+      name: 'Board 3',
       tasks: [
         {
           id: 8,
@@ -210,41 +210,42 @@ const roomInfoDemo = {
 
 export const DataContextProvider = (props) => {
   // const [ownRoom, setOwnRoom] = useState();
-  const [createdRooms, setCreatedRooms] = useState();
-  const [joinedRooms, setJoinedRooms] = useState();
+  const [createdRooms, setCreatedRooms] = useState([]);
+  const [joinedRooms, setJoinedRooms] = useState([]);
 
   const authCtx = useContext(AuthContext);
   const history = useHistory();
 
   const fetchRoomsData = useCallback(async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/rooms', {
-        headers: {
-          Authorization: 'Bearer ' + authCtx.userInfo?.token,
-        },
-      });
+    if (authCtx.userInfo?.token) {
+      try {
+        const response = await fetch('http://localhost:8080/api/rooms', {
+          headers: {
+            Authorization: 'Bearer ' + authCtx.userInfo?.token,
+          },
+        });
 
-      if (!response) {
-        return alert('Send request to server failed!');
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        const data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+
+        //set rooms data
+        // const ownRoom = data.ownRoom; //??
+        setCreatedRooms(data['created-rooms']);
+        setJoinedRooms(data['joined-rooms']);
+      } catch (error) {
+        console.log(error);
+
+        //fake data
+        setCreatedRooms(ROOM.createdRooms);
+        setJoinedRooms(ROOM.joinedRooms);
       }
-
-      const data = await response.json();
-
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
-      }
-
-      //set rooms data
-      // const ownRoom = data.ownRoom; //??
-
-      setCreatedRooms(data['created-rooms']);
-      setJoinedRooms(data['joined-rooms']);
-    } catch (error) {
-      console.log(error);
-
-      //fake data
-      setCreatedRooms(ROOM.createdRooms);
-      setJoinedRooms(ROOM.joinedRooms);
     }
   }, [authCtx.userInfo?.token]);
 
@@ -277,7 +278,6 @@ export const DataContextProvider = (props) => {
     let data;
 
     try {
-      console.log(authCtx.userInfo?.token);
       const response = await fetch('http://localhost:8080/api/room', {
         method: 'POST',
         headers: {
@@ -404,7 +404,7 @@ export const DataContextProvider = (props) => {
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
         body: JSON.stringify({
-          'room-id': roomId,
+          id: roomId,
         }),
       });
 
@@ -454,7 +454,7 @@ export const DataContextProvider = (props) => {
           Authorization: 'Bearer ' + authCtx.userInfo?.token,
         },
         body: JSON.stringify({
-          'room-id': roomId.trim(),
+          'room-id': roomId,
           password,
         }),
       });
@@ -471,7 +471,7 @@ export const DataContextProvider = (props) => {
       data = { 'room-id': 10, name: 'Joined room', status: true };
     }
 
-    if (!data.status) {
+    if (data.statusCode) {
       return alert(`Error: ${data.message}`);
     }
 
@@ -496,14 +496,19 @@ export const DataContextProvider = (props) => {
     let data;
 
     try {
-      const response = await fetch('http://localhost:8080/api/user-room', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx.userInfo?.token,
-        },
-        body: JSON.stringify({}),
-      });
+      const response = await fetch(
+        'http://localhost:8080/api/user-room/leave',
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx.userInfo?.token,
+          },
+          body: JSON.stringify({
+            'room-id': roomId,
+          }),
+        }
+      );
 
       if (!response) {
         return alert('Send request to server failed!');
@@ -522,10 +527,7 @@ export const DataContextProvider = (props) => {
     }
 
     setJoinedRooms((prev) => prev.filter((room) => room.id !== roomId));
-
-    if (data.status) {
-      history.replace('/');
-    }
+    history.replace('/');
   };
 
   const handleGetRoomInfo = async (roomId, callback) => {

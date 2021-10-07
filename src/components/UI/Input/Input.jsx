@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import classes from './Input.module.css';
 const Input = React.forwardRef((props, ref) => {
-  const inputRef = useRef();
-  const active = () => {
-    inputRef.current.focus();
-  };
+  // const inputRef = useRef();
+  // const active = () => {
+  //   inputRef.current.focus();
+  // };
 
   // useImperativeHandle(ref, () => {
   //   return {

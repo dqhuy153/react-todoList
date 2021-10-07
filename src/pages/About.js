@@ -99,7 +99,11 @@ export default function About(props) {
           <h1>DOCUMENTATION</h1>
           <ul>
             <li>
-              <a href="#" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/dqhuy153/react-todoList"
+                target="_blank"
+                rel="noreferrer"
+              >
                 SCRUM documentation
               </a>
             </li>
@@ -134,7 +138,11 @@ export default function About(props) {
                   </a>
                 </li>
                 <li>
-                  <a href="#" target="_blank" rel="noreferrer">
+                  <a
+                    href="https://github.com/toky0s/team6_todo_app"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     Back-end: API - Java Spring Boot
                   </a>
                 </li>
@@ -149,7 +157,7 @@ export default function About(props) {
           <h1>MEMBERS</h1>
           <ul>
             {members.map((member) => (
-              <li key={member} className={styles['member-item']}>
+              <li key={member.name} className={styles['member-item']}>
                 <div className={styles['member-item_left']}>
                   <MemberIcon firstLetter={getFirstLetterOfName(member.name)} />
                   <p className={styles['member-item_name']}>{member.name}</p>

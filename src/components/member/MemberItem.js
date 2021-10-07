@@ -15,6 +15,7 @@ export default function MemberItem({
   onLogout,
   hoverToShow = true,
   clickToShow = false,
+  positionLeft = null,
   ...props
 }) {
   const [showName, setShowName] = useState(hoverToShow ? true : false);
@@ -29,7 +30,10 @@ export default function MemberItem({
         className={styles.container}
         firstLetter={firstLetter}
         onMouseDown={clickToShow ? handleMemberClick : null}
-        style={{ '--display-card': hoverToShow ? 'none' : 'block' }}
+        style={{
+          '--display-card': hoverToShow ? 'none' : 'block',
+          '--position-left': positionLeft ? positionLeft : null,
+        }}
       >
         {name && showName && !isProfileHeader && (
           <Card className={styles['member-tag']}>
@@ -42,7 +46,7 @@ export default function MemberItem({
         {!name && additionItems && showName && !isProfileHeader && (
           <Card className={styles['member-tag']}>
             {additionItems.map((member) => (
-              <p key={member.id}>{member.name}</p>
+              <p key={member.id}>{member.username}</p>
             ))}
           </Card>
         )}

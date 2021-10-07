@@ -12,7 +12,7 @@ import styles from './BoardItem.module.scss';
 export default function BoardItem({
   id,
   title,
-  tasksData,
+  tasksData = [],
   onSaveClick,
   onDeleteClick,
 
@@ -36,12 +36,12 @@ export default function BoardItem({
     setShowBoardDetail(false);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     if (!boardTitle || boardTitle.trim() === '') {
       return alert("Task's title is required!");
     }
 
-    onSaveClick({
+    await onSaveClick({
       id,
       title: boardTitle,
     });
@@ -64,21 +64,47 @@ export default function BoardItem({
   // });
 
   //task handlers
-  const handleTaskStatusChange = (taskId) => {
-    let updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        task.status = !task.status;
-      }
-      return task;
-    });
+  const handleTaskStatusChange = async (taskData) => {
+    if (authCtx) {
+      const response = await fetch('http://localhost:8080/api/todo', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx?.userInfo.token,
+        },
+        body: JSON.stringify({
+          id: taskData.id,
+          title: taskData.title,
+          detail: taskData.detail,
+          status: !taskData.status ? 1 : 0,
+        }),
+      });
 
-    setTasks(updatedTasks);
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
+
+      const data = await response.json();
+
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+      let updatedTasks = tasks.map((task) => {
+        if (task.id === taskData.id) {
+          task.status = !task.status;
+        }
+        return task;
+      });
+
+      setTasks(updatedTasks);
+    }
   };
 
+  //delete task
   const handleDeleteTask = async (taskId) => {
     if (authCtx) {
       const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx?.userInfo.token,
@@ -101,19 +127,21 @@ export default function BoardItem({
       setTasks((prev) => prev.filter((task) => task.id !== taskId));
     }
   };
+
+  //save task
   const handleSaveTask = async (taskData) => {
     if (authCtx) {
       const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx?.userInfo.token,
         },
         body: JSON.stringify({
           id: taskData.id,
-          name: taskData.title,
+          title: taskData.title,
           detail: taskData.detail,
-          status: taskData.status,
+          status: taskData.status ? 1 : 0,
         }),
       });
 
@@ -131,7 +159,7 @@ export default function BoardItem({
         if (task.id === taskData.id) {
           task.title = taskData.title;
           task.detail = taskData.detail;
-          task.date = taskData.date;
+          // task.date = taskData.date;
           task.status = taskData.status;
         }
 
@@ -159,6 +187,8 @@ export default function BoardItem({
     }
 
     if (authCtx) {
+      const dateNow = new Date().toISOString().split('T')[0];
+
       const response = await fetch('http://localhost:8080/api/todo', {
         method: 'POST',
         headers: {
@@ -166,10 +196,10 @@ export default function BoardItem({
           Authorization: 'Bearer ' + authCtx?.userInfo.token,
         },
         body: JSON.stringify({
-          name: newTaskTitle,
+          title: newTaskTitle,
           detail: '',
-          publicDate: new Date().toLocaleString(),
-          status: false,
+          publicDate: dateNow,
+          status: 0,
           boardId: id,
         }),
       });
@@ -190,8 +220,12 @@ export default function BoardItem({
         id: data.id,
         title: newTaskTitle,
         detail: '',
-        date: new Date().toLocaleString(),
+        publicDate: dateNow,
         status: false,
+        modifiedUsername: authCtx.userInfo.username,
+        modifyUserId: authCtx.userInfo.userId,
+        createdUserId: authCtx.userInfo.userId,
+        createdUsername: authCtx.userInfo.username,
       });
 
       setTasks(updatedTasks);
@@ -246,12 +280,16 @@ export default function BoardItem({
               <TodoItem
                 completed={task.status}
                 id={task.id}
-                date={task.date}
+                date={task.publicDate.split(' ')[0]}
                 title={task.title}
                 description={task.detail}
-                onStatusChange={() => handleTaskStatusChange(task.id)}
+                onStatusChange={() => handleTaskStatusChange(task)}
                 onDeleteClick={handleDeleteTask}
                 onSaveClick={handleSaveTask}
+                modifyUsername={task.modifiedUsername}
+                modifyUserId={task.modifyUserId}
+                createdUserId={task.createdUserId}
+                createdUsername={task.createdUsername}
               />
             </li>
           ))}

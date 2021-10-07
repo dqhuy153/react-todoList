@@ -41,7 +41,31 @@ export default class Signup extends Component {
       <div className={styles.signup}>
         <div className={styles.container}>
           <div className={styles.logo}>TodoList.</div>
-          <form className={styles.row}>
+          <form
+            className={styles.row}
+            onSubmit={(e) => {
+              e.preventDefault();
+
+              if (
+                !this.state.username ||
+                !this.state.password ||
+                this.state.username.trim() === '' ||
+                this.state.password.trim() === ''
+              ) {
+                return alert('Please fill all required fields!');
+              }
+
+              if (this.state.password.length < 4) {
+                return alert('Minimum length of password is 4');
+              }
+
+              if (this.state.password !== this.state.confirmPassword) {
+                return alert('Confirm password not match!');
+              }
+
+              onSignup(this.state.username, this.state.password);
+            }}
+          >
             <div className={styles.title}> Sign up to Todos </div>
             <input
               type="text"
@@ -73,29 +97,7 @@ export default class Signup extends Component {
               onChange={(event) => this.isChangeConfirmPassword(event)}
             />
 
-            <button
-              onClick={() => {
-                if (
-                  !this.state.username ||
-                  !this.state.password ||
-                  this.state.username.trim() === '' ||
-                  this.state.password.trim() === ''
-                ) {
-                  return alert('Please fill all required fields!');
-                }
-
-                if (this.state.password.length < 4) {
-                  return alert('Minimum length of password is 4');
-                }
-
-                if (this.state.password !== this.state.confirmPassword) {
-                  return alert('Confirm password not match!');
-                }
-
-                onSignup(this.state.username, this.state.password);
-              }}
-              className={styles.btnLogin}
-            >
+            <button type="submit" className={styles.btnLogin}>
               Sign Up
             </button>
             <hr />

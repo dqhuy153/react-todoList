@@ -3,7 +3,7 @@
 
 import classes from './Card.module.css';
 
-const Card = ({ style, onOutSideClick, ...props }) => {
+const Card = ({ style, ...props }) => {
   // const cardRef = useRef(null);
 
   // useOutsideClick(cardRef, () => console.log('abc'));

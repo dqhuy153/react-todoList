@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Card from '../components/UI/Card/Card';
 import Input from '../components/UI/Input/Input';
 import iconAddCircle from '../assets/images/add_circle.png';
@@ -33,10 +33,10 @@ import DataContext from '../store/data/data-context';
 function Home(props) {
   const dataCtx = useContext(DataContext);
 
-  const ROOM =
-    dataCtx.roomsData !== null
-      ? dataCtx.roomsData
-      : { createdRooms: [], joinedRooms: [] };
+  const [roomsData, setRoomsData] = useState({
+    createdRooms: [],
+    joinedRooms: [],
+  });
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -48,6 +48,16 @@ function Home(props) {
   const [passwordCreateRoom, setPasswordCreateRoom] = useState();
   const [idJoinRoom, setIdJoinRoom] = useState();
   const [passwordJoinRoom, setPasswordJoinRoom] = useState();
+
+  useEffect(() => {
+    setRoomsData(
+      dataCtx.roomsData !== null
+        ? dataCtx.roomsData
+        : { createdRooms: [], joinedRooms: [] }
+    );
+  }, [dataCtx.roomsData]);
+
+  // console.log(roomsData);
 
   // const [formIsValid, setFormIsValid] = useState(false);
 
@@ -144,7 +154,7 @@ function Home(props) {
       return alert('Room password is required!');
     }
 
-    dataCtx.onJoinRoom(idJoinRoom, passwordJoinRoom, true);
+    dataCtx.onJoinRoom(parseInt(idJoinRoom), passwordJoinRoom, true);
 
     setIdJoinRoom('');
     setPasswordJoinRoom('');
@@ -187,7 +197,7 @@ function Home(props) {
       {!showFullCreatedRoom && (
         <div className={styles.room_list}>
           <RoomList
-            items={ROOM.createdRooms?.slice(0, 4)}
+            items={roomsData.createdRooms?.slice(0, 4)}
             backgroundColor="#ff6868"
             textColor="#fff"
           />
@@ -197,14 +207,14 @@ function Home(props) {
       {showFullCreatedRoom && (
         <div className={styles.room_list}>
           <RoomList
-            items={ROOM.createdRooms}
+            items={roomsData.createdRooms}
             backgroundColor="#ff6868"
             textColor="#fff"
           />
         </div>
       )}
       {/* show browser all if has 5 room or more */}
-      {ROOM.createdRooms?.length > 4 && (
+      {roomsData.createdRooms?.length > 4 && (
         <div>
           <button
             onClick={handleToggleFullCreatedRoom}
@@ -237,7 +247,7 @@ function Home(props) {
           {/* minimal room list */}
           {!showFullJoinedRoom && (
             <RoomList
-              items={ROOM.joinedRooms?.slice(0, 4)}
+              items={roomsData.joinedRooms?.slice(0, 4)}
               backgroundColor="#ff8368"
               textColor="#fff"
               showOption={false}
@@ -246,7 +256,7 @@ function Home(props) {
           {/* full room list */}
           {showFullJoinedRoom && (
             <RoomList
-              items={ROOM.joinedRooms}
+              items={roomsData.joinedRooms}
               backgroundColor="#ff8368"
               textColor="#fff"
               showOption={false}
@@ -254,7 +264,7 @@ function Home(props) {
           )}
         </div>
         {/* show browser all if has 5 room or more */}
-        {ROOM.joinedRooms?.length > 4 && (
+        {roomsData.joinedRooms?.length > 4 && (
           <button
             onClick={handleToggleFullJoinedRoom}
             className={styles['container__recent--show__rooms']}
@@ -283,13 +293,13 @@ function Home(props) {
             <Input
               onChange={handleRoomTitleChange}
               placeholder="Room title"
-              value={titleCreateRoom}
+              value={titleCreateRoom || ''}
             />
             <Input
               onChange={handleRoomPasswordChange}
               type="password"
               placeholder="Room password"
-              value={passwordCreateRoom}
+              value={passwordCreateRoom || ''}
             />
           </div>
         </Modal1>
@@ -315,13 +325,13 @@ function Home(props) {
             <Input
               onChange={handleJoinRoomIdChange}
               placeholder="Room ID"
-              value={idJoinRoom}
+              value={idJoinRoom || ''}
             />
             <Input
               onChange={handleJoinRoomPasswordChange}
               type="password"
               placeholder="Room password"
-              value={passwordJoinRoom}
+              value={passwordJoinRoom || ''}
             />
           </div>
         </Modal1>

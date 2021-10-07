@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import MemberList from '../components/member/MemberList';
@@ -29,19 +29,27 @@ export default function Room(props) {
   const { roomId } = useParams();
 
   useEffect(() => {
-    if (dataCtx) {
+    if (authCtx) {
       dataCtx.onGetRoomInfo(roomId, (data) => {
         if (data) {
-          console.log(data);
           setRoomInfo(data);
           setMembers(
-            data?.members?.map((member) => {
-              return {
-                ...member,
-                isCreator: member.id === data.userId ? true : false,
-              };
-            })
+            [
+              {
+                id: data?.roomInfo.userId,
+                username: data?.roomInfo.username,
+                isCreator: true,
+              },
+            ].concat(
+              data?.members?.map((member) => {
+                return {
+                  ...member,
+                  isCreator: member.id === data.userId ? true : false,
+                };
+              })
+            )
           );
+
           setBoards(data?.boards);
         }
       });
@@ -50,7 +58,8 @@ export default function Room(props) {
       // setMembers(roomInfoDemo.members);
     }
     //fake data
-  }, [roomId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, authCtx]);
 
   //leave modal handlers
   const handleShowLeaveModal = () => {
@@ -67,12 +76,12 @@ export default function Room(props) {
   };
 
   const handleLeaveRoom = () => {
-    dataCtx.onLeaveRoom(roomInfo.roomInfo.id);
+    dataCtx.onLeaveRoom(parseInt(roomId));
   };
 
   //board handlers
   const handleCreateNewBoard = async (boardTitle) => {
-    //send api
+    // send api
     if (authCtx) {
       const response = await fetch('http://localhost:8080/api/board', {
         method: 'POST',
@@ -81,7 +90,7 @@ export default function Room(props) {
           Authorization: 'Bearer ' + authCtx?.userInfo.token,
         },
         body: JSON.stringify({
-          name: boardTitle,
+          name: boardTitle.toString(),
           'room-id': roomInfo?.roomInfo.id,
         }),
       });
@@ -101,7 +110,7 @@ export default function Room(props) {
         const updatedBoard = prev;
 
         updatedBoard.push({
-          id: data.id ? data.id : Math.random(),
+          id: data.id || Math.random(),
           title: boardTitle,
           tasks: [],
         });
@@ -153,7 +162,7 @@ export default function Room(props) {
     if (authCtx) {
       //send api
       const response = await fetch('http://localhost:8080/api/board', {
-        method: 'PUT',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + authCtx?.userInfo.token,

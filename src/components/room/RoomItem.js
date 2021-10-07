@@ -38,13 +38,13 @@ export default function RoomItem({ id, showOption, name, password, ...props }) {
   };
 
   //room handlers
-  const handleSaveRoom = () => {
+  const handleSaveRoom = async () => {
     if (!updatedRoomTitle || updatedRoomTitle.trim().length === 0) {
       return alert('Room title is required!');
     }
 
-    if (!updatedRoomPassword || updatedRoomPassword.length < 5) {
-      return alert("Minimum length's password is 5!");
+    if (!updatedRoomPassword || updatedRoomPassword.length < 4) {
+      return alert("Minimum length's password is 4!");
     }
 
     const updatedData = {
@@ -52,9 +52,9 @@ export default function RoomItem({ id, showOption, name, password, ...props }) {
       password: updatedRoomPassword,
     };
 
-    dataCtx.onEditRoom(id, updatedData, true);
+    await dataCtx.onEditRoom(id, updatedData, true);
 
-    setUpdatedRoomPassword();
+    setShowOptionModal(false);
   };
 
   const handleDeleteRoom = () => {

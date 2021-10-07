@@ -16,7 +16,7 @@ export default function MemberList({ items = [], ...props }) {
 
   return (
     <ul className={styles.container}>
-      { showItems.map((member) => (
+      {showItems.map((member) => (
         <li key={member.id}>
           <MemberItem
             id={member.id}

@@ -6,6 +6,7 @@ import DataContext from '../../store/data/data-context';
 import styles from './SideBar.module.scss';
 import Modal1 from '../UI/Modal/Modal1';
 import Input from '../UI/Input/Input';
+import { useHistory } from 'react-router';
 
 export default function SideBar(props) {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -17,6 +18,7 @@ export default function SideBar(props) {
   const [passwordJoinRoom, setPasswordJoinRoom] = useState();
 
   const dataCtx = useContext(DataContext);
+  const history = useHistory();
 
   const showModalCreateHandler = () => {
     setShowCreateModal(true);
@@ -91,7 +93,7 @@ export default function SideBar(props) {
     <div className={styles.container}>
       <ul className={styles['side-bar-list']}>
         {/* Room */}
-        <li className={styles.active}>
+        <li className={styles.active} onClick={() => history.push('/')}>
           <MdDashboard size={23} />
           <p>Boards</p>
         </li>
@@ -130,13 +132,13 @@ export default function SideBar(props) {
             <Input
               onChange={handleRoomTitleChange}
               placeholder="Room title"
-              value={titleCreateRoom}
+              value={titleCreateRoom || ''}
             />
             <Input
               onChange={handleRoomPasswordChange}
               type="password"
               placeholder="Room password"
-              value={passwordCreateRoom}
+              value={passwordCreateRoom || ''}
             />
           </div>
         </Modal1>
@@ -161,13 +163,13 @@ export default function SideBar(props) {
             <Input
               onChange={handleJoinRoomIdChange}
               placeholder="Room ID"
-              value={idJoinRoom}
+              value={idJoinRoom || ''}
             />
             <Input
               onChange={handleJoinRoomPasswordChange}
               type="password"
               placeholder="Room password"
-              value={passwordJoinRoom}
+              value={passwordJoinRoom || ''}
             />
           </div>
         </Modal1>

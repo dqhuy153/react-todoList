@@ -125,6 +125,7 @@ export const AuthContextProvider = (props) => {
       data = { status: true };
     }
 
+    alert('Sign up successfully!');
     //enter sign in page
     window.location.href = '/sign-in';
   };
