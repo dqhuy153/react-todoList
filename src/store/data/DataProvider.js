@@ -104,104 +104,33 @@ const roomInfoDemo = {
       id: 5,
       username: 'Nguyen Van A',
     },
-    {
-      id: 6,
-      username: 'Nguyen Van Le ABC',
-    },
   ],
   boards: [
     {
       id: 1,
-      name: 'Board 1',
-      tasks: [
+      title: 'Welcome board',
+      Task: [
         {
           id: 1,
-          title: 'Task 1',
-          detail: 'Description task 1',
-          date: '2021-09-24',
+          title: 'To do example',
+          detail: 'Description example.',
+          publicDate: '2021-09-24',
           status: false,
+          createdUserId: 1,
+          createdUsername: 'Admin',
+          modifyUserId: 1,
+          modifiedUsername: 'Admin',
         },
         {
           id: 2,
-          title: 'Task 2',
-          detail: 'Description task 2',
-          date: '2021-09-25',
+          title: 'To do completed',
+          detail: 'Description example.',
+          publicDate: '2021-09-24',
           status: true,
-        },
-        {
-          id: 3,
-          title: 'Task 3',
-          detail: 'Description task 3',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 4,
-          title: 'Task 4',
-          detail: 'Description task 4',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 5,
-          title: 'Task 5',
-          detail: 'Description task 5',
-          date: '2021-09-26',
-          status: false,
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Board 2 with very long name',
-      tasks: [
-        {
-          id: 6,
-          title: 'Task 6',
-          detail: 'Description task 6',
-          date: '2021-09-24',
-          status: false,
-        },
-        {
-          id: 7,
-          title: 'Task 7',
-          detail: 'Description task 7',
-          date: '2021-09-25',
-          status: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Board 3',
-      tasks: [
-        {
-          id: 8,
-          title: 'Task 8',
-          detail: 'Description task 8',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 9,
-          title: 'Task 9',
-          detail: 'Description task 9',
-          date: '2021-09-25',
-          status: true,
-        },
-        {
-          id: 10,
-          title: 'Task 10',
-          detail: 'Description task 10',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 11,
-          title: 'Task 11',
-          detail: 'Description task 11',
-          date: '2021-09-26',
-          status: false,
+          createdUserId: 1,
+          createdUsername: 'Admin',
+          modifyUserId: 1,
+          modifiedUsername: 'Admin',
         },
       ],
     },
@@ -558,8 +487,6 @@ export const DataContextProvider = (props) => {
       console.log(error);
 
       data = roomInfoDemo;
-      //fake data
-      // data = { 'room-id': 10, name: 'Joined room', status: true };
     }
 
     callback(data);

@@ -10,26 +10,6 @@ import Modal1 from '../components/UI/Modal/Modal1';
 import styles from './Home.module.scss';
 import DataContext from '../store/data/data-context';
 
-// const roomTitleReducer = (state, action) => {
-//   if (action.type === 'USER_INPUT') {
-//     return { roomTitle: action.val, isValid: action.val.trim().length > 0 };
-//   }
-//   if (action.type === 'INPUT_BLUR') {
-//     return { value: state.value, isValid: state.value.trim().length > 0 };
-//   }
-//   return { value: '', isValid: false };
-// };
-
-// const roomPasswordReducer = (state, action) => {
-//   if (action.type === 'USER_INPUT') {
-//     return { roomPassword: action.val, isValid: action.val.trim().length > 6 };
-//   }
-//   if (action.type === 'INPUT_BLUR') {
-//     return { value: state.value, isValid: state.value.trim().length > 6 };
-//   }
-//   return { value: '', isValid: false };
-// };
-
 function Home(props) {
   const dataCtx = useContext(DataContext);
 
@@ -56,29 +36,6 @@ function Home(props) {
         : { createdRooms: [], joinedRooms: [] }
     );
   }, [dataCtx.roomsData]);
-
-  // console.log(roomsData);
-
-  // const [formIsValid, setFormIsValid] = useState(false);
-
-  // const [emailState, dispatchEmail] = useReducer(roomTitleReducer, {
-  //   value: '',
-  //   isValid: false,
-  // });
-
-  // const [passwordState, dispatchPassword] = useReducer(roomPasswordReducer, {
-  //   value: '',
-  //   isValid: false,
-  // });
-
-  // useEffect(() => {
-  //   //the useEffect run after every components render in life cycle
-  //   console.log('EFFECT RUNNING');
-
-  //   return () => {
-  //     console.log('EFFECT CLEANING UP');
-  //   };
-  // }, [passwordState.value]);
 
   //show/hide full room handlers
   const handleToggleFullCreatedRoom = () => {
@@ -134,10 +91,6 @@ function Home(props) {
     setShowCreateModal(false);
   };
 
-  //edit room handler
-
-  //delete room handler
-
   //join room handlers
   const handleJoinRoomIdChange = (e) => {
     setIdJoinRoom(e.target.value);
@@ -161,8 +114,6 @@ function Home(props) {
 
     setShowJoinModal(false);
   };
-
-  //leave room handler
 
   return (
     // workspace

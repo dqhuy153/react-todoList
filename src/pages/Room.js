@@ -20,6 +20,7 @@ export default function Room(props) {
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
 
+  //check current user is creator?
   let isCreator;
   if (authCtx && dataCtx) {
     isCreator =
@@ -28,6 +29,7 @@ export default function Room(props) {
 
   const { roomId } = useParams();
 
+  //get board total info here
   useEffect(() => {
     if (authCtx) {
       dataCtx.onGetRoomInfo(roomId, (data) => {
@@ -36,8 +38,10 @@ export default function Room(props) {
           setMembers(
             [
               {
-                id: data?.roomInfo.userId,
-                username: data?.roomInfo.username,
+                id: data?.roomInfo.userId ? data?.roomInfo.userId : 1, //if not have server, will use fake data
+                username: data?.roomInfo.username
+                  ? data?.roomInfo.username
+                  : 'Admin',
                 isCreator: true,
               },
             ].concat(
@@ -53,11 +57,7 @@ export default function Room(props) {
           setBoards(data?.boards);
         }
       });
-
-      // setRoomInfo(roomInfoDemo);
-      // setMembers(roomInfoDemo.members);
     }
-    //fake data
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, authCtx]);
 
@@ -70,6 +70,7 @@ export default function Room(props) {
     setShowLeaveModal(false);
   };
 
+  //*** */
   //member handlers
   const handleRemoveMember = (id) => {
     setMembers((prev) => prev.filter((member) => member.id !== id));
@@ -82,35 +83,42 @@ export default function Room(props) {
   //board handlers
   const handleCreateNewBoard = async (boardTitle) => {
     // send api
+    let data;
     if (authCtx) {
-      const response = await fetch('http://localhost:8080/api/board', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          name: boardTitle.toString(),
-          'room-id': roomInfo?.roomInfo.id,
-        }),
-      });
+      try {
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            name: boardTitle.toString(),
+            'room-id': roomInfo?.roomInfo.id,
+          }),
+        });
 
-      if (!response) {
-        return alert('Send request to server failed!');
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.log(error);
+
+        //fake data
+        data = { id: Math.random() };
       }
-
-      const data = await response.json();
-
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
-      }
-
       //update boards state
       setBoards((prev) => {
         const updatedBoard = prev;
 
         updatedBoard.push({
-          id: data.id || Math.random(),
+          id: data.id,
           title: boardTitle,
           tasks: [],
         });
@@ -121,28 +129,33 @@ export default function Room(props) {
   };
 
   const handleSaveBoard = async (boardData) => {
+    let data;
     if (authCtx) {
-      //send api
-      const response = await fetch('http://localhost:8080/api/board', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          id: boardData.id,
-          name: boardData.title,
-        }),
-      });
+      try {
+        //send api
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: boardData.id,
+            name: boardData.title,
+          }),
+        });
 
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
 
-      const data = await response.json();
+        data = await response.json();
 
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
 
       //update boards state
@@ -159,27 +172,32 @@ export default function Room(props) {
   };
 
   const handleDeleteBoard = async (boardId) => {
+    let data;
     if (authCtx) {
-      //send api
-      const response = await fetch('http://localhost:8080/api/board', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          id: boardId,
-        }),
-      });
+      try {
+        //send api
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: boardId,
+          }),
+        });
 
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
 
-      const data = await response.json();
+        data = await response.json();
 
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
       }
 
       //update boards state

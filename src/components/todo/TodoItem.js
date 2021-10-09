@@ -12,24 +12,6 @@ import Modal1 from '../UI/Modal/Modal1';
 
 import styles from './TodoItem.module.scss';
 
-const comments = [
-  {
-    id: 1, //id
-    'user-id': 3, //user-id
-    //todo-id
-    username: 'Huy', //username
-    content: 'Some comment here', //content
-    // date: '18:30 24/9/21',//ko co
-  },
-  {
-    id: 2,
-    'user-id': 2,
-    username: 'Chien',
-    content: 'This task has been done!',
-    // date: '16:30 24/9/21',
-  },
-];
-
 export default function TodoItem({
   id,
   title,
@@ -97,17 +79,6 @@ export default function TodoItem({
           );
         } catch (error) {
           console.log(error);
-
-          //fake data
-          setTaskComments(
-            comments.map((comment) => {
-              return {
-                ...comment,
-                isCurrentUser:
-                  authCtx.userInfo.userId === comment['user-id'] ? true : false,
-              };
-            })
-          );
         }
       }
     };
@@ -148,64 +119,79 @@ export default function TodoItem({
       return alert("Your comment can't be empty.");
     }
 
-    const response = await fetch('http://localhost:8080/api/comment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authCtx?.userInfo.token,
-      },
-      body: JSON.stringify({
+    if (authCtx) {
+      let data;
+      try {
+        const response = await fetch('http://localhost:8080/api/comment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            content: newComment,
+            'todo-id': id,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+
+        //fake data
+        data = { id: Math.random() };
+      }
+
+      const updatedComments = taskComments;
+
+      updatedComments.unshift({
+        id: data.id || Math.random(),
+        'user-id': data['user-id'] || authCtx.userInfo.userId,
+        username: data['username'] || authCtx.userInfo.username,
         content: newComment,
-        'todo-id': id,
-      }),
-    });
+        date: new Date().toLocaleString(),
+        isCurrentUser: true,
+      });
 
-    if (!response) {
-      return alert('Send request to server failed!');
+      setTaskComments(updatedComments);
+
+      setNewComment('');
     }
-
-    const data = await response.json();
-
-    if (data.statusCode) {
-      return alert(`Error: ${data.message}`);
-    }
-
-    const updatedComments = taskComments;
-
-    updatedComments.unshift({
-      id: data.id || Math.random(),
-      'user-id': data['user-id'] || authCtx.userInfo.userId,
-      username: data['username'] || authCtx.userInfo.username,
-      content: newComment,
-      date: new Date().toLocaleString(),
-      isCurrentUser: true,
-    });
-
-    setTaskComments(updatedComments);
-
-    setNewComment('');
   };
 
   const handleDeleteComment = async (commentId) => {
-    const response = await fetch('http://localhost:8080/api/comment', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authCtx?.userInfo.token,
-      },
-      body: JSON.stringify({
-        id: commentId,
-      }),
-    });
+    let data;
+    try {
+      const response = await fetch('http://localhost:8080/api/comment', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authCtx?.userInfo.token,
+        },
+        body: JSON.stringify({
+          id: commentId,
+        }),
+      });
 
-    if (!response) {
-      return alert('Send request to server failed!');
-    }
+      if (!response) {
+        return alert('Send request to server failed!');
+      }
 
-    const data = await response.json();
+      data = await response.json();
 
-    if (data.statusCode) {
-      return alert(`Error: ${data.message}`);
+      if (data.statusCode) {
+        return alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     setTaskComments((prev) =>

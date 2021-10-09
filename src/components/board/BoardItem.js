@@ -49,46 +49,45 @@ export default function BoardItem({
     handleHideBoardDetail();
   };
 
+  //sort remain task first
   tasks.sort((x, y) => {
     // false values first
     return x.status === y.status ? 0 : x.status ? 1 : -1;
   });
-  // .sort((x, y) => {
-  //   // earlier date created first
-  //   const dateX = new Date(x.date);
-  //   const dateY = new Date(y.date);
-
-  //   console.log(dateX);
-
-  //   return dateX.getTime() < dateY.getTime() ? -1 : 1;
-  // });
 
   //task handlers
   const handleTaskStatusChange = async (taskData) => {
+    let data;
+
     if (authCtx) {
-      const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          id: taskData.id,
-          title: taskData.title,
-          detail: taskData.detail,
-          status: !taskData.status ? 1 : 0,
-        }),
-      });
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskData.id,
+            title: taskData.title,
+            detail: taskData.detail,
+            status: !taskData.status ? 1 : 0,
+          }),
+        });
 
-      if (!response) {
-        return alert('Send request to server failed!');
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
       }
 
-      const data = await response.json();
-
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
-      }
       let updatedTasks = tasks.map((task) => {
         if (task.id === taskData.id) {
           task.status = !task.status;
@@ -97,76 +96,6 @@ export default function BoardItem({
       });
 
       setTasks(updatedTasks);
-    }
-  };
-
-  //delete task
-  const handleDeleteTask = async (taskId) => {
-    if (authCtx) {
-      const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          id: taskId,
-        }),
-      });
-
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
-
-      const data = await response.json();
-
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
-      }
-
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
-    }
-  };
-
-  //save task
-  const handleSaveTask = async (taskData) => {
-    if (authCtx) {
-      const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          id: taskData.id,
-          title: taskData.title,
-          detail: taskData.detail,
-          status: taskData.status ? 1 : 0,
-        }),
-      });
-
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
-
-      const data = await response.json();
-
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
-      }
-
-      let updatedTask = tasks.map((task) => {
-        if (task.id === taskData.id) {
-          task.title = taskData.title;
-          task.detail = taskData.detail;
-          // task.date = taskData.date;
-          task.status = taskData.status;
-        }
-
-        return task;
-      });
-
-      setTasks(updatedTask);
     }
   };
 
@@ -186,32 +115,40 @@ export default function BoardItem({
       return alert("Task's title is required!");
     }
 
+    const dateNow = new Date().toISOString().split('T')[0];
+    let data;
+
     if (authCtx) {
-      const dateNow = new Date().toISOString().split('T')[0];
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            title: newTaskTitle,
+            detail: '',
+            publicDate: dateNow,
+            status: 0,
+            boardId: id,
+          }),
+        });
 
-      const response = await fetch('http://localhost:8080/api/todo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authCtx?.userInfo.token,
-        },
-        body: JSON.stringify({
-          title: newTaskTitle,
-          detail: '',
-          publicDate: dateNow,
-          status: 0,
-          boardId: id,
-        }),
-      });
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
 
-      if (!response) {
-        return alert('Send request to server failed!');
-      }
+        data = await response.json();
 
-      const data = await response.json();
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
 
-      if (data.statusCode) {
-        return alert(`Error: ${data.message}`);
+        //fake data
+        data = { id: Math.random() };
       }
 
       //add new tasks
@@ -222,10 +159,10 @@ export default function BoardItem({
         detail: '',
         publicDate: dateNow,
         status: false,
-        modifiedUsername: authCtx.userInfo.username,
-        modifyUserId: authCtx.userInfo.userId,
-        createdUserId: authCtx.userInfo.userId,
-        createdUsername: authCtx.userInfo.username,
+        modifiedUsername: authCtx.userInfo.username || 'Admin',
+        modifyUserId: authCtx.userInfo.userId || 1,
+        createdUserId: authCtx.userInfo.userId || 'Admin',
+        createdUsername: authCtx.userInfo.username || 1,
       });
 
       setTasks(updatedTasks);
@@ -233,6 +170,85 @@ export default function BoardItem({
       //close new task form
       setShowNewTask(false);
       setNewTaskTitle('');
+    }
+  };
+
+  //save task
+  const handleSaveTask = async (taskData) => {
+    let data;
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskData.id,
+            title: taskData.title,
+            detail: taskData.detail,
+            status: taskData.status ? 1 : 0,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      let updatedTask = tasks.map((task) => {
+        if (task.id === taskData.id) {
+          task.title = taskData.title;
+          task.detail = taskData.detail;
+          task.status = taskData.status;
+        }
+
+        return task;
+      });
+
+      setTasks(updatedTask);
+    }
+  };
+
+  //delete task
+  const handleDeleteTask = async (taskId) => {
+    let data;
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskId,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      setTasks((prev) => prev.filter((task) => task.id !== taskId));
     }
   };
 
@@ -318,3 +334,13 @@ export default function BoardItem({
     </div>
   );
 }
+
+// .sort((x, y) => {
+//   // earlier date created first
+//   const dateX = new Date(x.date);
+//   const dateY = new Date(y.date);
+
+//   console.log(dateX);
+
+//   return dateX.getTime() < dateY.getTime() ? -1 : 1;
+// });
