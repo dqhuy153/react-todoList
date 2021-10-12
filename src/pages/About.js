@@ -106,6 +106,17 @@ export default function About(props) {
               >
                 SCRUM documentation
               </a>
+              {/* <ul>
+                <li>
+                  <a
+                    href="https://dbdiagram.io/d/614c7bc1825b5b0146103997"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Database Design
+                  </a>
+                </li>
+              </ul> */}
             </li>
             <li>
               <a
@@ -114,6 +125,15 @@ export default function About(props) {
                 rel="noreferrer"
               >
                 UI Design - Figma
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://dbdiagram.io/d/614c7bc1825b5b0146103997"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Database Design
               </a>
             </li>
             <li>

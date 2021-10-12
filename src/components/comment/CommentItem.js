@@ -20,13 +20,10 @@ export default function CommentItem({
   return (
     <div className={styles.container}>
       <div className={styles['comment-left']}>
-        <MemberItem
-          firstLetter={getFirstLetterOfName(username)}
-          name={username}
-          id={userId}
-          positionLeft="1rem"
-        />
-        <p className={styles.content}>{content}</p>
+        <MemberItem firstLetter={getFirstLetterOfName(username)} id={userId} />
+        <p className={styles.content}>
+          <span>{username}:</span> {content}
+        </p>
       </div>
       <div className={styles['comment-right']}>
         <p>{date}</p>
