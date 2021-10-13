@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const AuthContext = React.createContext({
   userInfo: {},
+  setUserInfo: () => {},
   isLoggedIn: false,
+  setIsLoggedIn: (boolean) => {},
   onLogout: () => {},
-  onLogin: (email, password) => {},
+  onLogin: (username, password) => {},
+  onSignup: (username, password) => {},
 });
 
 export default AuthContext;

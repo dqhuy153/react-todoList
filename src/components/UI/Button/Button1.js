@@ -11,6 +11,7 @@ export default function Button1({
   onClick,
   disabled,
   className,
+  textColor = '#000',
 
   ...props
 }) {
@@ -21,6 +22,7 @@ export default function Button1({
         '--button-font-size': buttonFontSize,
         '--button-color': buttonColor,
         '--button-font-weight': buttonFontWeight,
+        '--text-color': textColor,
       }}
       type={type || 'button'}
       className={`${classes.button} ${className}`}

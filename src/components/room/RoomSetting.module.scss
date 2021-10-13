@@ -4,6 +4,11 @@
   background: var(--primary-color);
   border-radius: 50%;
   position: relative;
+  z-index: 1;
+
+  svg {
+    cursor: pointer;
+  }
 
   .icon {
     color: #000;
@@ -40,10 +45,6 @@
 
       span {
         font-size: 1.3rem;
-      }
-
-      .eye-icon {
-        cursor: pointer;
       }
     }
 

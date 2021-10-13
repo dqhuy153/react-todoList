@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { MdEdit } from 'react-icons/md';
+import AuthContext from '../../store/Auth/auth-context';
 
 import TodoItem from '../todo/TodoItem';
 import Button1 from '../UI/Button/Button1';
@@ -11,7 +12,7 @@ import styles from './BoardItem.module.scss';
 export default function BoardItem({
   id,
   title,
-  tasksData,
+  tasksData = [],
   onSaveClick,
   onDeleteClick,
 
@@ -24,6 +25,8 @@ export default function BoardItem({
   const [showBoardDetail, setShowBoardDetail] = useState(false);
   const [boardTitle, setBoardTitle] = useState(title);
 
+  const authCtx = useContext(AuthContext);
+
   //board handler
   const handleShowBoardDetail = () => {
     setShowBoardDetail(true);
@@ -33,12 +36,12 @@ export default function BoardItem({
     setShowBoardDetail(false);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     if (!boardTitle || boardTitle.trim() === '') {
       return alert("Task's title is required!");
     }
 
-    onSaveClick({
+    await onSaveClick({
       id,
       title: boardTitle,
     });
@@ -46,48 +49,54 @@ export default function BoardItem({
     handleHideBoardDetail();
   };
 
+  //sort remain task first
   tasks.sort((x, y) => {
     // false values first
     return x.status === y.status ? 0 : x.status ? 1 : -1;
   });
-  // .sort((x, y) => {
-  //   // earlier date created first
-  //   const dateX = new Date(x.date);
-  //   const dateY = new Date(y.date);
-
-  //   console.log(dateX);
-
-  //   return dateX.getTime() < dateY.getTime() ? -1 : 1;
-  // });
 
   //task handlers
-  const handleTaskStatusChange = (taskId) => {
-    let updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        task.status = !task.status;
+  const handleTaskStatusChange = async (taskData) => {
+    let data;
+
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskData.id,
+            title: taskData.title,
+            detail: taskData.detail,
+            status: !taskData.status ? 1 : 0,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
       }
-      return task;
-    });
 
-    setTasks(updatedTasks);
-  };
+      let updatedTasks = tasks.map((task) => {
+        if (task.id === taskData.id) {
+          task.status = !task.status;
+        }
+        return task;
+      });
 
-  const handleDeleteTask = (taskId) => {
-    setTasks((prev) => prev.filter((task) => task.id !== taskId));
-  };
-  const handleSaveTask = (taskData) => {
-    let updatedTask = tasks.map((task) => {
-      if (task.id === taskData.id) {
-        task.title = taskData.title;
-        task.detail = taskData.detail;
-        task.date = taskData.date;
-        task.status = taskData.status;
-      }
-
-      return task;
-    });
-
-    setTasks(updatedTask);
+      setTasks(updatedTasks);
+    }
   };
 
   //new tasks handlers
@@ -99,28 +108,148 @@ export default function BoardItem({
     setNewTaskTitle(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleCreateNewTask = async (e) => {
     e.preventDefault();
 
     if (!newTaskTitle || newTaskTitle.trim() === '') {
       return alert("Task's title is required!");
     }
 
-    //add new tasks
-    const updatedTasks = tasks;
-    updatedTasks.push({
-      id: Math.random(),
-      title: newTaskTitle,
-      detail: '',
-      date: new Date(),
-      status: false,
-    });
+    const dateNow = new Date().toISOString().split('T')[0];
+    let data;
 
-    setTasks(updatedTasks);
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            title: newTaskTitle,
+            detail: '',
+            publicDate: dateNow,
+            status: 0,
+            boardId: id,
+          }),
+        });
 
-    //close new task form
-    setShowNewTask(false);
-    setNewTaskTitle('');
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+
+        //fake data
+        data = { id: Math.random() };
+      }
+
+      //add new tasks
+      const updatedTasks = tasks;
+      updatedTasks.push({
+        id: data.id,
+        title: newTaskTitle,
+        detail: '',
+        publicDate: dateNow,
+        status: false,
+        modifiedUsername: authCtx.userInfo.username || 'Admin',
+        modifyUserId: authCtx.userInfo.userId || 1,
+        createdUserId: authCtx.userInfo.userId || 'Admin',
+        createdUsername: authCtx.userInfo.username || 1,
+      });
+
+      setTasks(updatedTasks);
+
+      //close new task form
+      setShowNewTask(false);
+      setNewTaskTitle('');
+    }
+  };
+
+  //save task
+  const handleSaveTask = async (taskData) => {
+    let data;
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskData.id,
+            title: taskData.title,
+            detail: taskData.detail,
+            status: taskData.status ? 1 : 0,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      let updatedTask = tasks.map((task) => {
+        if (task.id === taskData.id) {
+          task.title = taskData.title;
+          task.detail = taskData.detail;
+          task.status = taskData.status;
+        }
+
+        return task;
+      });
+
+      setTasks(updatedTask);
+    }
+  };
+
+  //delete task
+  const handleDeleteTask = async (taskId) => {
+    let data;
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/todo', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: taskId,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      setTasks((prev) => prev.filter((task) => task.id !== taskId));
+    }
   };
 
   const handleClose = () => {
@@ -167,12 +296,16 @@ export default function BoardItem({
               <TodoItem
                 completed={task.status}
                 id={task.id}
-                date={task.date}
+                date={task.publicDate.split(' ')[0]}
                 title={task.title}
                 description={task.detail}
-                onStatusChange={() => handleTaskStatusChange(task.id)}
+                onStatusChange={() => handleTaskStatusChange(task)}
                 onDeleteClick={handleDeleteTask}
                 onSaveClick={handleSaveTask}
+                modifyUsername={task.modifiedUsername}
+                modifyUserId={task.modifyUserId}
+                createdUserId={task.createdUserId}
+                createdUsername={task.createdUsername}
               />
             </li>
           ))}
@@ -190,7 +323,7 @@ export default function BoardItem({
               buttonText="Add task"
               onChange={handleNewTaskChange}
               value={newTaskTitle}
-              onSubmit={handleSubmit}
+              onSubmit={handleCreateNewTask}
               onClose={handleClose}
               buttonWidth="50%"
               buttonFontSize="0.9rem"
@@ -201,3 +334,13 @@ export default function BoardItem({
     </div>
   );
 }
+
+// .sort((x, y) => {
+//   // earlier date created first
+//   const dateX = new Date(x.date);
+//   const dateY = new Date(y.date);
+
+//   console.log(dateX);
+
+//   return dateX.getTime() < dateY.getTime() ? -1 : 1;
+// });

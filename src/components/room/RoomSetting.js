@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AiTwotoneSetting } from 'react-icons/ai';
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
+import { MdDoNotDisturb } from 'react-icons/md';
 
 import { getFirstLetterOfName } from '../../util/helper';
 import MemberIcon from '../member/MemberIcon';
@@ -15,6 +16,7 @@ export default function RoomSetting({
   members,
   className,
   onRemoveMember,
+  onClose,
   ...props
 }) {
   const [showSetting, setShowSetting] = useState(false);
@@ -41,7 +43,15 @@ export default function RoomSetting({
       {showSetting && (
         <Card className={styles.tag}>
           {/* information */}
-          <p className={styles['tag-title']}>Information</p>
+          <div className="flex-sb">
+            <p className={styles['tag-title']}>Information</p>
+            <IoMdClose
+              size={20}
+              fontWeight="500"
+              onClick={() => setShowSetting(false)}
+              className={styles['tag-member-delete']}
+            />
+          </div>
           <p>Room ID: {id}</p>
           <div className={styles['tag-password']}>
             <p>
@@ -69,13 +79,15 @@ export default function RoomSetting({
             {members.map((member) => (
               <li key={member.id} className={styles['tag-member-item']}>
                 <div className={styles['tag-member-item_left']}>
-                  <MemberIcon firstLetter={getFirstLetterOfName(member.name)} />
+                  <MemberIcon
+                    firstLetter={getFirstLetterOfName(member.username)}
+                  />
                   <p className={styles['tag-member-item_name']}>
-                    {member.name}
+                    {member.username}
                   </p>
                 </div>
                 {!member.isCreator && (
-                  <IoMdClose
+                  <MdDoNotDisturb
                     size={18}
                     onClick={() => onRemoveMember(member.id)}
                     className={styles['tag-member-delete']}

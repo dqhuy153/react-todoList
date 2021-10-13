@@ -6,7 +6,7 @@ import BoardItem from './BoardItem';
 import styles from './BoardList.module.scss';
 
 export default function BoardList({
-  items,
+  items = [],
   onCreateNewBoard,
   onDeleteBoardClick,
   onSaveBoardClick,
@@ -25,14 +25,14 @@ export default function BoardList({
     setNewBoardTitle(e.target.value);
   };
 
-  const handleSubmitNewBoard = (e) => {
+  const handleSubmitNewBoard = async (e) => {
     e.preventDefault();
 
     if (!newBoardTitle || newBoardTitle.trim() === '') {
       return alert("Board's title is required!");
     }
 
-    onCreateNewBoard(newBoardTitle);
+    await onCreateNewBoard(newBoardTitle);
 
     setShowNewBoard(false);
     setNewBoardTitle('');
@@ -52,7 +52,7 @@ export default function BoardList({
               <BoardItem
                 id={board.id}
                 title={board.title}
-                tasksData={board.tasks}
+                tasksData={board.Task}
                 onDeleteClick={onDeleteBoardClick}
                 onSaveClick={onSaveBoardClick}
               />

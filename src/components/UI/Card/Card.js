@@ -1,10 +1,21 @@
-import React from 'react';
+// import React, { useRef } from 'react';
+// import useOutsideClick from '../../../hooks/useOutsideClick';
 
 import classes from './Card.module.css';
 
-const Card = (props) => {
+const Card = ({ style, ...props }) => {
+  // const cardRef = useRef(null);
+
+  // useOutsideClick(cardRef, () => console.log('abc'));
+
   return (
-    <div className={`${classes.card} ${props.className}`}>{props.children}</div>
+    <div
+      // ref={cardRef}
+      className={`${classes.card} ${props.className}`}
+      style={style}
+    >
+      {props.children}
+    </div>
   );
 };
 

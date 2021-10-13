@@ -1,10 +1,10 @@
-import React, { useRef } from 'react'
+import React from 'react';
 import classes from './Input.module.css';
 const Input = React.forwardRef((props, ref) => {
-  const inputRef = useRef();
-  const active = () => {
-    inputRef.current.focus();
-  };
+  // const inputRef = useRef();
+  // const active = () => {
+  //   inputRef.current.focus();
+  // };
 
   // useImperativeHandle(ref, () => {
   //   return {
@@ -12,10 +12,13 @@ const Input = React.forwardRef((props, ref) => {
   //   }
   // })
 
-
   return (
-    <div className={`${classes.control} ${props.isValid === false ? classes.invalid : ''}`}>
-      {props.label &&  <label htmlFor={props.id}>{props.label}</label> }
+    <div
+      className={`${classes.control} ${
+        props.isValid === false ? classes.invalid : ''
+      }`}
+    >
+      {props.label && <label htmlFor={props.id}>{props.label}</label>}
       <input
         type={props.type}
         id={props.id}
@@ -25,7 +28,7 @@ const Input = React.forwardRef((props, ref) => {
         placeholder={props.placeholder}
       />
     </div>
-  )
-})
+  );
+});
 
-export default Input
+export default Input;

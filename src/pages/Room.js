@@ -1,193 +1,208 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import styles from './Room.module.scss';
 import MemberList from '../components/member/MemberList';
 import BoardList from '../components/board/BoardList';
 import RoomSetting from '../components/room/RoomSetting';
+import AuthContext from '../store/Auth/auth-context';
+import Button1 from '../components/UI/Button/Button1';
+import Modal1 from '../components/UI/Modal/Modal1';
 
-const roomInfo = {
-  name: 'Room title',
-  id: '10',
-  password: '123456',
-  userId: 3,
-  isCreator: true,
-  members: [
-    {
-      id: 1,
-      name: 'Andy',
-    },
-    {
-      id: 2,
-      name: 'Chien',
-    },
-    {
-      id: 3,
-      name: 'Huy',
-    },
-    {
-      id: 4,
-      name: 'Xin',
-    },
-    {
-      id: 5,
-      name: 'Nguyen Van A',
-    },
-    {
-      id: 6,
-      name: 'Nguyen Van Le ABC',
-    },
-  ],
-  boards: [
-    {
-      id: 1,
-      title: 'Board 1',
-      tasks: [
-        {
-          id: 1,
-          title: 'Task 1',
-          detail: 'Description task 1',
-          date: '2021-09-24',
-          status: false,
-        },
-        {
-          id: 2,
-          title: 'Task 2',
-          detail: 'Description task 2',
-          date: '2021-09-25',
-          status: true,
-        },
-        {
-          id: 3,
-          title: 'Task 3',
-          detail: 'Description task 3',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 4,
-          title: 'Task 4',
-          detail: 'Description task 4',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 5,
-          title: 'Task 5',
-          detail: 'Description task 5',
-          date: '2021-09-26',
-          status: false,
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Board 2 with very long name',
-      tasks: [
-        {
-          id: 6,
-          title: 'Task 6',
-          detail: 'Description task 6',
-          date: '2021-09-24',
-          status: false,
-        },
-        {
-          id: 7,
-          title: 'Task 7',
-          detail: 'Description task 7',
-          date: '2021-09-25',
-          status: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Board 3',
-      tasks: [
-        {
-          id: 8,
-          title: 'Task 8',
-          detail: 'Description task 8',
-          date: '2021-09-25',
-          status: false,
-        },
-        {
-          id: 9,
-          title: 'Task 9',
-          detail: 'Description task 9',
-          date: '2021-09-25',
-          status: true,
-        },
-        {
-          id: 10,
-          title: 'Task 10',
-          detail: 'Description task 10',
-          date: '2021-09-26',
-          status: true,
-        },
-        {
-          id: 11,
-          title: 'Task 11',
-          detail: 'Description task 11',
-          date: '2021-09-26',
-          status: false,
-        },
-      ],
-    },
-  ],
-};
+import styles from './Room.module.scss';
+import DataContext from '../store/data/data-context';
 
 export default function Room(props) {
-  const [boards, setBoards] = useState(roomInfo.boards);
-  const [members, setMembers] = useState(roomInfo.members);
+  const [roomInfo, setRoomInfo] = useState();
+  const [boards, setBoards] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const dataCtx = useContext(DataContext);
+
+  //check current user is creator?
+  let isCreator;
+  if (authCtx && dataCtx) {
+    isCreator =
+      roomInfo?.roomInfo?.userId === parseInt(authCtx?.userInfo?.userId);
+  }
 
   const { roomId } = useParams();
 
+  //get board total info here
   useEffect(() => {
-    setMembers(
-      roomInfo.members.map((member) => {
-        return {
-          ...member,
-          isCreator: member.id === roomInfo.userId ? true : false,
-        };
-      })
-    );
-  }, []);
+    if (authCtx) {
+      dataCtx.onGetRoomInfo(roomId, (data) => {
+        if (data) {
+          setRoomInfo(data);
+          setMembers(
+            [
+              {
+                id: data?.roomInfo.userId ? data?.roomInfo.userId : 1, //if not have server, will use fake data
+                username: data?.roomInfo.username
+                  ? data?.roomInfo.username
+                  : 'Admin',
+                isCreator: true,
+              },
+            ].concat(
+              data?.members?.map((member) => {
+                return {
+                  ...member,
+                  isCreator: member.id === data.userId ? true : false,
+                };
+              })
+            )
+          );
 
+          setBoards(data?.boards);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, authCtx]);
+
+  //leave modal handlers
+  const handleShowLeaveModal = () => {
+    setShowLeaveModal(true);
+  };
+
+  const handleHideLeaveModal = () => {
+    setShowLeaveModal(false);
+  };
+
+  //*** */
   //member handlers
   const handleRemoveMember = (id) => {
     setMembers((prev) => prev.filter((member) => member.id !== id));
   };
 
-  //board handlers
-  const handleCreateNewBoard = (boardTitle) => {
-    setBoards((prev) => {
-      const updatedBoard = prev;
-
-      updatedBoard.push({
-        id: Math.random(),
-        title: boardTitle,
-        tasks: [],
-      });
-
-      return updatedBoard;
-    });
+  const handleLeaveRoom = () => {
+    dataCtx.onLeaveRoom(parseInt(roomId));
   };
 
-  const handleSaveBoard = (boardData) => {
-    let updatedBoard = boards.map((board) => {
-      if (board.id === boardData.id) {
-        board.title = boardData.title;
+  //board handlers
+  const handleCreateNewBoard = async (boardTitle) => {
+    // send api
+    let data;
+    if (authCtx) {
+      try {
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            name: boardTitle.toString(),
+            'room-id': roomInfo?.roomInfo.id,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.log(error);
+
+        //fake data
+        data = { id: Math.random() };
+      }
+      //update boards state
+      setBoards((prev) => {
+        const updatedBoard = prev;
+
+        updatedBoard.push({
+          id: data.id,
+          title: boardTitle,
+          tasks: [],
+        });
+
+        return updatedBoard;
+      });
+    }
+  };
+
+  const handleSaveBoard = async (boardData) => {
+    let data;
+    if (authCtx) {
+      try {
+        //send api
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: boardData.id,
+            name: boardData.title,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
 
-      return board;
-    });
+      //update boards state
+      let updatedBoard = boards.map((board) => {
+        if (board.id === boardData.id) {
+          board.title = boardData.title;
+        }
 
-    setBoards(updatedBoard);
+        return board;
+      });
+
+      setBoards(updatedBoard);
+    }
   };
 
-  const handleDeleteBoard = (boardId) => {
-    setBoards((prev) => prev.filter((board) => board.id !== boardId));
+  const handleDeleteBoard = async (boardId) => {
+    let data;
+    if (authCtx) {
+      try {
+        //send api
+        const response = await fetch('http://localhost:8080/api/board', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authCtx?.userInfo.token,
+          },
+          body: JSON.stringify({
+            id: boardId,
+          }),
+        });
+
+        if (!response) {
+          return alert('Send request to server failed!');
+        }
+
+        data = await response.json();
+
+        if (data.statusCode) {
+          return alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      //update boards state
+      setBoards((prev) => prev.filter((board) => board.id !== boardId));
+    }
   };
 
   return (
@@ -195,19 +210,47 @@ export default function Room(props) {
       {/* room information */}
       <div className={styles['room-header']}>
         <h2 className={styles.title}>
-          {roomInfo.name} - ID: {roomId}
+          {roomInfo?.roomInfo?.name} - ID: {roomId}
         </h2>
         <div className={styles.icons}>
           <MemberList items={members}></MemberList>
           {/* creator can see room setting */}
-          {roomInfo.isCreator && (
+          {/* joiner will see leave room btn */}
+          {isCreator ? (
             <RoomSetting
               className={styles.settingIcon}
               id={roomId}
-              password={roomInfo.password}
+              password={roomInfo.roomInfo.password}
               members={members}
               onRemoveMember={handleRemoveMember}
             />
+          ) : (
+            <>
+              <Button1
+                buttonColor="#FC6868"
+                textColor="#fff"
+                onClick={handleShowLeaveModal}
+                className={styles['leave-btn']}
+              >
+                Leave
+              </Button1>
+              {showLeaveModal && (
+                <Modal1
+                  title="Do you want to leave room?"
+                  onBackdropClick={handleHideLeaveModal}
+                  onCloseClick={handleHideLeaveModal}
+                  btn1="Cancel"
+                  btn1Width="25%"
+                  btn1Color="#DADADA"
+                  onBtn1Click={handleHideLeaveModal}
+                  btn2="OK"
+                  btn2Color="var(--primary-color)"
+                  btn2Width="25%"
+                  btnFontWeight="500"
+                  onBtn2Click={handleLeaveRoom}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

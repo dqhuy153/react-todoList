@@ -4,7 +4,7 @@ import MemberItem from './MemberItem';
 
 import styles from './MemberList.module.scss';
 
-export default function MemberList({ items, ...props }) {
+export default function MemberList({ items = [], ...props }) {
   const showItems = items.slice(0, 3);
   let additionNumMember = null;
   let additionItems = null;
@@ -20,9 +20,9 @@ export default function MemberList({ items, ...props }) {
         <li key={member.id}>
           <MemberItem
             id={member.id}
-            name={member.name}
+            name={member.username}
             isCreator={member.isCreator}
-            firstLetter={getFirstLetterOfName(member.name)}
+            firstLetter={getFirstLetterOfName(member.username)}
           />
         </li>
       ))}

@@ -2,7 +2,7 @@ import React from 'react';
 import { IoMdClose } from 'react-icons/io';
 
 import { getFirstLetterOfName } from '../../util/helper';
-import MemberIcon from '../member/MemberIcon';
+import MemberItem from '../member/MemberItem';
 
 import styles from './CommentItem.module.scss';
 
@@ -20,8 +20,10 @@ export default function CommentItem({
   return (
     <div className={styles.container}>
       <div className={styles['comment-left']}>
-        <MemberIcon firstLetter={getFirstLetterOfName(username)} />
-        <p className={styles.content}>{content}</p>
+        <MemberItem firstLetter={getFirstLetterOfName(username)} id={userId} />
+        <p className={styles.content}>
+          <span>{username}:</span> {content}
+        </p>
       </div>
       <div className={styles['comment-right']}>
         <p>{date}</p>
