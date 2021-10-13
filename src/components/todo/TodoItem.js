@@ -26,6 +26,7 @@ export default function TodoItem({
   onSaveClick,
   onDeleteClick,
   onCancelClick,
+
   ...props
 }) {
   const [showTaskDetail, setShowTaskDetail] = useState(false);
@@ -213,6 +214,7 @@ export default function TodoItem({
       className={`${styles.container} ${styles.flex} ${
         completed ? styles.completed : null
       }`}
+      draggable={true}
     >
       <div className={styles.task}>
         <input type="checkbox" checked={completed} onChange={onStatusChange} />

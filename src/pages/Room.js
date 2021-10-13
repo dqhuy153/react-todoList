@@ -34,6 +34,7 @@ export default function Room(props) {
     if (authCtx) {
       dataCtx.onGetRoomInfo(roomId, (data) => {
         if (data) {
+          console.log(data);
           setRoomInfo(data);
           setMembers(
             [
@@ -72,8 +73,30 @@ export default function Room(props) {
 
   //*** */
   //member handlers
-  const handleRemoveMember = (id) => {
-    setMembers((prev) => prev.filter((member) => member.id !== id));
+  const handleRemoveMember = async (userId) => {
+    const response = await fetch('http://localhost:8080/api/user-room/kick', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authCtx?.userInfo.token,
+      },
+      body: JSON.stringify({
+        'user-id': userId,
+        'room-id': parseInt(roomId),
+      }),
+    });
+
+    if (!response) {
+      return alert('Send request to server failed!');
+    }
+
+    const data = await response.json();
+
+    if (data.statusCode) {
+      return alert(`Error: ${data.message}`);
+    }
+
+    setMembers((prev) => prev.filter((member) => member.id !== userId));
   };
 
   const handleLeaveRoom = () => {
