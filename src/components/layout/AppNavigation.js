@@ -29,7 +29,6 @@ export default function AppNavigation({ logoTitle = 'Demo.', ...props }) {
             </NavLink>
           </li>
           <li>
-
             <MemberItem
               firstLetter={getFirstLetterOfName(authCtx.userInfo?.username)}
               name={authCtx.userInfo?.username}
@@ -41,11 +40,10 @@ export default function AppNavigation({ logoTitle = 'Demo.', ...props }) {
             />
           </li>
           {/* <li>
-            <NavLink to="/signin" activeClassName={styles.active}>
-
+            <NavLink to="/sign-in" activeClassName={styles.active}>
               Sign In
             </NavLink>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>
