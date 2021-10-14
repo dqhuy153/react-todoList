@@ -34,7 +34,6 @@ export default function Room(props) {
     if (authCtx) {
       dataCtx.onGetRoomInfo(roomId, (data) => {
         if (data) {
-          console.log(data);
           setRoomInfo(data);
           setMembers(
             [
@@ -71,7 +70,6 @@ export default function Room(props) {
     setShowLeaveModal(false);
   };
 
-  //*** */
   //member handlers
   const handleRemoveMember = async (userId) => {
     try {
